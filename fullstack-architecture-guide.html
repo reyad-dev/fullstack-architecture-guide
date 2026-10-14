@@ -75,7 +75,7 @@ body{
 }
 a{color:var(--trace);text-underline-offset:3px}
 :focus-visible{outline:2.5px solid var(--trace);outline-offset:2px}
-h1,h2,h3,h4{font-family:var(--kufi);color:var(--ink);margin:0;font-weight:700;line-height:1.35}
+h1,h2,h3,h4{font-family:var(--kufi);color:var(--ink);margin:0;font-weight:700;line-height:1.65}
 h3{font-size:21px}
 h4{font-size:17px;font-family:var(--sans);font-weight:700}
 p{margin:0 0 14px}
@@ -87,7 +87,7 @@ li::marker{color:var(--trace)}
 
 /* Profile identity: reyad-dev / Mohamed Reyad */
 .brand{max-width:1264px;margin:28px auto 0;padding:28px 32px;border-radius:12px;background:linear-gradient(135deg,#090d16,#173c43);color:#c4d9df;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.brand-name{font-size:clamp(22px,3vw,32px);font-weight:700;color:#fff;margin:0 0 6px}
+.brand-name{font-size:clamp(18px,2vw,24px);font-weight:600;line-height:1.8;color:#fff;margin:0 0 10px}
 .brand-tagline{color:#77e1cb;font-size:12px;letter-spacing:1px;margin:0}
 .brand-links{display:flex;gap:16px;flex-wrap:wrap}
 .brand a{color:#77e1cb;font-size:14px}
@@ -112,7 +112,8 @@ main{min-width:0}
 /* ---------- hero ---------- */
 .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:28px;align-items:end;margin-bottom:40px;background:var(--sheet);border:1.5px solid var(--ink);position:relative;padding:44px 44px 28px}
 .hero::before,.sheet::before{content:"";position:absolute;inset:7px;border:1px solid var(--rule-soft);pointer-events:none}
-.hero h1{font-size:clamp(38px,5.4vw,66px);line-height:1.22;letter-spacing:0;margin-bottom:18px}
+.hero h1{font-size:clamp(30px,3.2vw,44px);line-height:1.65;font-weight:600;letter-spacing:0;margin-bottom:24px;text-wrap:balance}
+.hero h1 bdi{white-space:nowrap}
 .hero .lede{font-size:18.5px;line-height:1.9;color:var(--ink-2);max-width:34em;margin-bottom:24px}
 .hero .who{font-size:14.5px;color:var(--graphite);border-top:1px solid var(--rule);padding-top:14px;max-width:34em}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
@@ -366,6 +367,10 @@ footer.end{border-top:1.5px solid var(--ink);padding-top:16px;font-size:14px;col
 }
 @media (max-width:760px){
   body{font-size:16px}
+  .hero{padding:28px 22px;gap:24px}
+  .hero h1{font-size:clamp(27px,5.5vw,34px);line-height:1.75;margin-bottom:22px}
+  .hero .lede{font-size:16px;line-height:2;margin-bottom:24px}
+  .brand-name{font-size:19px;line-height:1.8}
   .sheet{padding:0 18px 26px}
   .titleblock{grid-template-columns:72px minmax(0,1fr)}
   .titleblock .no b{font-size:18px}
@@ -438,7 +443,7 @@ footer.end{border-top:1.5px solid var(--ink);padding-top:16px;font-size:14px;col
 <main>
 <header class="hero">
   <div>
-    <h1>تعلم Full Stack بالعربية ومعمارية المشاريع</h1>
+    <h1>تعلم <bdi lang="en">Full Stack</bdi> بالعربية</h1>
     <p class="lede">دليل مجاني لكل مطوّر Front-end يريد تعلّم تطوير Full Stack: خطة من 24 أسبوعًا، ومقارنة بين معماريات البرمجيات، وحاسبة للحمل والتوسع، ومنهج لتنظيم المشاريع الكبيرة مع قوالب جاهزة للاستخدام.</p>
     <div class="actions">
       <a class="btn primary" href="#a02">ابدأ بالخطة التعليمية</a>
