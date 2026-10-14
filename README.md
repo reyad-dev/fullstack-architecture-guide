@@ -1,12 +1,10 @@
-<p align="center"><img src="assets/banner.svg" alt="Mohamed Reyad — Strategy, Design, Technology" width="100%"></p>
-
 # Full Stack Architecture Guide | دليل معمارية Full Stack
 
 [افتح الدليل / Live guide](https://reyad-dev.github.io/fullstack-architecture-guide/) · [GitHub](https://github.com/reyad-dev) · [Portfolio](https://reyad.site/)
 
 ## العربية
 
-دليل تعليمي تفاعلي باللغة العربية لمطوّر Front-end الذي يريد الانتقال إلى تطوير Full Stack وفهم اختيار المعمارية وتنظيم المشاريع والتوسع. يستخدم هوية **محمد رياض / Mohamed Reyad** من بروفايل **reyad-dev**: الألوان الداكنة والنعناعية، بانر البروفايل وروابطه. الخط الأساسي وخط العناوين **Alexandria**، وخط الأكواد **IBM Plex Mono**.
+مرجع تعليمي مجاني ومتاح للجميع باللغة العربية لمطوّر Front-end الذي يريد الانتقال إلى تطوير Full Stack وفهم اختيار المعمارية وتنظيم المشاريع والتوسع. الواجهة تركز على موضوع الدليل واحتياجات القارئ، مع توقيع صاحب المشروع في التذييل. الخط الأساسي وخط العناوين **Alexandria**، وخط الأكواد **IBM Plex Mono**.
 
 ### محتويات الدليل
 
@@ -31,7 +29,7 @@ python -m http.server 8000
 
 ## English
 
-An interactive **Arabic** learning guide for front-end developers moving into full-stack development. It covers architecture selection, project organization and scaling. The visual identity follows **Mohamed Reyad / reyad-dev**: dark and mint colors, the profile banner and profile links. **Alexandria** is used for body text and headings; **IBM Plex Mono** is used for code.
+A free, public, interactive **Arabic** learning guide for front-end developers moving into full-stack development. It covers architecture selection, project organization and scaling. The interface puts the learning resource first, with a small creator credit in the footer. **Alexandria** is used for body text and headings; **IBM Plex Mono** is used for code.
 
 ### Features
 
@@ -59,6 +57,7 @@ The educational content remains Arabic; the file overview and documentation are 
 | `assets/banner.svg` | Banner from the GitHub profile / بانر هوية البروفايل |
 | `assets/favicon.svg` | MR browser icon / أيقونة المتصفح |
 | `.nojekyll` | Serve as a static site / نشر الملفات كموقع ثابت |
+| `sitemap.xml` | Canonical page for search discovery / خريطة الصفحة الأساسية لمحركات البحث |
 
 Both HTML files contain their CSS and JavaScript. Keep them identical when making updates.
 
@@ -69,6 +68,18 @@ Both HTML files contain their CSS and JavaScript. Keep them identical when makin
 GitHub Pages serves the root of the `main` branch. The repository includes `.nojekyll`, so no Jekyll build is needed.
 
 ينشر GitHub Pages محتويات المجلد الرئيسي من فرع `main`، دون الحاجة إلى Jekyll.
+
+## Search visibility | الظهور في البحث
+
+The page includes a descriptive Arabic title and H1, a meta description, index/follow directives, a canonical URL, sharing metadata, LearningResource structured data, visible FAQs and a sitemap. Both HTML copies point to the same canonical URL to consolidate duplicate content. These settings support crawling and indexing; they do not guarantee search rankings or immediate indexing.
+
+الصفحة مجهزة بعنوان ووصف عربيين، ورابط أساسي موحد، وبيانات منظمة للدليل التعليمي، وأسئلة شائعة وخريطة موقع. نسختا HTML تشيران إلى الرابط الأساسي نفسه. الإعدادات تساعد محركات البحث على فهم الصفحة، لكنها لا تضمن ترتيبًا أو فهرسة فورية.
+
+To monitor indexing, verify ownership of the URL-prefix property `https://reyad-dev.github.io/fullstack-architecture-guide/` in Google Search Console. Add the provided verification tag to both HTML files, submit `sitemap.xml`, then inspect the canonical URL and request indexing. No Search Console property has been verified or indexing request submitted by this repository setup.
+
+لمتابعة الفهرسة، أضف رابط المشروع كخاصية URL-prefix في Google Search Console، ثم ضع وسم التحقق الذي يمنحه Google داخل ملفي HTML. بعد التحقق، أرسل `sitemap.xml` وافحص الرابط الأساسي واطلب فهرسته. إعداد المشروع وحده لا ينشئ خاصية Search Console ولا يرسل طلب فهرسة.
+
+References: [Google title guidance](https://developers.google.com/search/docs/appearance/title-link), [canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap).
 
 ## Mohamed Reyad | محمد رياض
 
