@@ -1243,9 +1243,14 @@ Link to spec / task:
     var obs=new IntersectionObserver(function(es){
       es.forEach(function(e){
         if(!e.isIntersecting)return;
-        var on=null;
-        links.forEach(function(l){var hit=l.getAttribute('href')==='#'+e.target.id;l.classList.toggle('on',hit);if(hit)on=l;});
-        if(on&&window.innerWidth<=1080){on.scrollIntoView({block:'nearest',inline:'center'});}
+        /* Highlight only: scrolling a sticky navigation link into view also
+           moves the document and interrupts mobile swipes between sections. */
+        links.forEach(function(l){
+          var hit=l.getAttribute('href')==='#'+e.target.id;
+          l.classList.toggle('on',hit);
+          if(hit){l.setAttribute('aria-current','location');}
+          else{l.removeAttribute('aria-current');}
+        });
       });
     },{rootMargin:'-25% 0px -65% 0px'});
     document.querySelectorAll('section.sheet').forEach(function(s){obs.observe(s);});
