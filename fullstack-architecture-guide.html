@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>من الواجهة إلى النظام الكامل — دليل المطوّر Full Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Alexandria:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F8FB;
+  --sheet:#FFFFFF;
+  --grid:#E7EDF4;
+  --ink:#102C32;
+  --ink-2:#29494F;
+  --graphite:#5D6879;
+  --rule:#CBD5E1;
+  --rule-soft:#E3E9F0;
+  --trace:#176B5B;
+  --trace-soft:#EAF8F4;
+  --red:#B2392B;
+  --red-soft:#FBEEEB;
+  --green:#2C7550;
+  --green-soft:#EAF5EF;
+  --amber:#8A6414;
+  --amber-soft:#FBF4E2;
+  --sans:"Alexandria","Segoe UI",Tahoma,sans-serif;
+  --kufi:"Alexandria","Segoe UI",Tahoma,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(20px + env(safe-area-inset-top,0px))}
+body{
+  margin:0;color:var(--ink-2);font:400 16.5px/1.9 var(--sans);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--trace);text-underline-offset:3px}
+:focus-visible{outline:2.5px solid var(--trace);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--kufi);color:var(--ink);margin:0;font-weight:700;line-height:1.35}
+h3{font-size:21px}
+h4{font-size:17px;font-family:var(--sans);font-weight:700}
+p{margin:0 0 14px}
+code,.mono{font-family:var(--mono);font-size:.88em;direction:ltr;unicode-bidi:isolate}
+p code,li code,td code{background:var(--trace-soft);color:var(--ink);padding:1px 6px;border-radius:3px}
+ul{padding-inline-start:20px;margin:0 0 14px}
+li{margin-bottom:6px}
+li::marker{color:var(--trace)}
+
+/* Profile identity: reyad-dev / Mohamed Reyad */
+.brand{max-width:1264px;margin:28px auto 0;padding:28px 32px;border-radius:12px;background:linear-gradient(135deg,#090d16,#173c43);color:#c4d9df;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.brand-name{font-size:clamp(22px,3vw,32px);font-weight:700;color:#fff;margin:0 0 6px}
+.brand-tagline{color:#77e1cb;font-size:12px;letter-spacing:1px;margin:0}
+.brand-links{display:flex;gap:16px;flex-wrap:wrap}
+.brand a{color:#77e1cb;font-size:14px}
+.about-guide{margin-top:22px;padding:18px;border:1px solid var(--rule);background:var(--trace-soft)}
+.about-guide summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.about-guide h3{font-size:17px;margin:18px 0 8px}
+@media(max-width:700px){.brand{margin:14px 12px 0;padding:22px}.brand-links{gap:12px}}
+@media print{.brand{background:#fff;color:var(--ink);border:1px solid var(--rule)}.brand-name,.brand a,.brand-tagline{color:var(--ink)}}
+/* ---------- shell ---------- */
+.shell{max-width:1320px;margin:0 auto;padding:28px 28px 80px;display:grid;grid-template-columns:232px minmax(0,1fr);gap:40px}
+.index{position:sticky;top:calc(20px + env(safe-area-inset-top,0px));align-self:start;background:var(--sheet);border:1.5px solid var(--ink);padding:18px 0 10px}
+.index h2{font-size:15px;padding:0 18px 10px;border-bottom:1px solid var(--rule)}
+.index ol{list-style:none;margin:0;padding:6px 0}
+.index li{margin:0}
+.index a{display:grid;grid-template-columns:44px 1fr;gap:6px;padding:6px 18px;color:var(--ink-2);text-decoration:none;font-size:14px;line-height:1.6;border-inline-start:3px solid transparent}
+.index a span:first-child{font-family:var(--mono);font-size:12px;color:var(--graphite);direction:ltr;text-align:right;padding-top:2px}
+.index a:hover{background:var(--trace-soft)}
+.index a.on{border-inline-start-color:var(--trace);background:var(--trace-soft);color:var(--ink);font-weight:600}
+.index .legend{font-size:12.5px;color:var(--graphite);padding:10px 18px 4px;border-top:1px solid var(--rule);margin-top:6px;line-height:1.7}
+main{min-width:0}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:28px;align-items:end;margin-bottom:40px;background:var(--sheet);border:1.5px solid var(--ink);position:relative;padding:44px 44px 28px}
+.hero::before,.sheet::before{content:"";position:absolute;inset:7px;border:1px solid var(--rule-soft);pointer-events:none}
+.hero h1{font-size:clamp(38px,5.4vw,66px);line-height:1.22;letter-spacing:0;margin-bottom:18px}
+.hero .lede{font-size:18.5px;line-height:1.9;color:var(--ink-2);max-width:34em;margin-bottom:24px}
+.hero .who{font-size:14.5px;color:var(--graphite);border-top:1px solid var(--rule);padding-top:14px;max-width:34em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15px/1 var(--sans);padding:13px 18px;border:1.5px solid var(--ink);color:var(--ink);background:#fff;text-decoration:none;cursor:pointer;border-radius:2px}
+.btn.primary{background:var(--ink);color:#fff}
+.btn:hover{background:var(--trace-soft)}
+.btn.primary:hover{background:var(--trace);border-color:var(--trace)}
+.elevation{width:100%;height:auto;display:block}
+.elevation .floor rect{fill:#fff;stroke:var(--ink);stroke-width:1.5}
+.elevation .floor.busy rect{fill:var(--trace-soft)}
+.elevation text{font-family:var(--sans);fill:var(--ink)}
+.elevation .dim text{font-family:var(--mono);font-size:12px;fill:var(--graphite)}
+.elevation .cap{font-size:12px;fill:var(--graphite)}
+.elevation .red{stroke:var(--red);fill:none;stroke-width:1.5}
+.elevation .redtxt{fill:var(--red);font-size:12.5px;font-weight:600}
+@media (prefers-reduced-motion:no-preference){
+  .elevation .floor{opacity:0;animation:rise .5s ease-out forwards}
+  .elevation .floor:nth-of-type(1){animation-delay:.10s}
+  .elevation .floor:nth-of-type(2){animation-delay:.22s}
+  .elevation .floor:nth-of-type(3){animation-delay:.34s}
+  .elevation .floor:nth-of-type(4){animation-delay:.46s}
+  .elevation .floor:nth-of-type(5){animation-delay:.58s}
+  .elevation .floor:nth-of-type(6){animation-delay:.70s}
+  .elevation .floor:nth-of-type(7){animation-delay:.82s}
+  .elevation .late{opacity:0;animation:fade .6s ease-out 1.1s forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes fade{to{opacity:1}}
+}
+
+/* ---------- sheets ---------- */
+.sheet{background:var(--sheet);border:1.5px solid var(--ink);position:relative;padding:0 44px 40px;margin-bottom:36px}
+.titleblock{display:grid;grid-template-columns:104px minmax(0,1fr);border:1.5px solid var(--ink);margin:28px 0 30px;background:#fff;position:relative;z-index:1}
+.titleblock .no{border-inline-end:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:10px;gap:2px}
+.titleblock .no small{font-size:12px;color:var(--graphite)}
+.titleblock .no b{font-family:var(--mono);font-weight:500;font-size:24px;color:var(--ink);direction:ltr}
+.titleblock .tt{padding:16px 22px}
+.titleblock h2{font-size:clamp(23px,2.6vw,30px);margin-bottom:4px}
+.titleblock p{margin:0;color:var(--graphite);font-size:15.5px;line-height:1.75}
+.prose{max-width:46em}
+.sub{font-size:21px;margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+.note{border-inline-start:3px solid var(--trace);background:var(--trace-soft);padding:14px 18px;margin:18px 0;font-size:15.5px;max-width:52em}
+.note.warn{border-color:var(--red);background:var(--red-soft)}
+.note.good{border-color:var(--green);background:var(--green-soft)}
+.note b{color:var(--ink)}
+
+/* truths */
+.truths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule)}
+.truths div{padding:20px 22px;border-inline-start:1px solid var(--rule)}
+.truths div:first-child{border-inline-start:0}
+.truths h3{font-size:18px;margin-bottom:8px}
+.truths p{font-size:15.5px;margin:0;color:var(--ink-2)}
+
+/* ---------- timeline ---------- */
+.rhythm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--rule);margin:8px 0 28px}
+.rhythm div{padding:14px 16px;border-inline-start:1px solid var(--rule)}
+.rhythm div:first-child{border-inline-start:0}
+.rhythm b{display:block;font-family:var(--mono);font-size:22px;color:var(--ink);direction:ltr;text-align:right;font-weight:500}
+.rhythm span{font-size:14px;color:var(--graphite)}
+.bar{display:flex;height:10px;margin-top:8px;border:1px solid var(--ink)}
+.bar i{display:block;height:100%}
+.phases{position:relative;padding-inline-start:46px}
+.phases::before{content:"";position:absolute;inset-inline-start:15px;top:8px;bottom:8px;width:2px;background:var(--ink)}
+.phase{position:relative;margin-bottom:14px}
+.phase::before{content:attr(data-n);position:absolute;inset-inline-start:-46px;top:12px;width:32px;height:32px;border:2px solid var(--ink);background:#fff;font:500 14px/28px var(--mono);text-align:center;color:var(--ink)}
+.phase[open]::before{background:var(--ink);color:#fff}
+.phase summary{cursor:pointer;list-style:none;border:1px solid var(--rule);padding:12px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:center;background:#fff}
+.phase summary::-webkit-details-marker{display:none}
+.phase summary:hover{border-color:var(--ink)}
+.phase[open] summary{border-color:var(--ink);border-bottom-style:dashed}
+.phase summary h3{font-size:19px}
+.phase summary .wk{font-family:var(--mono);font-size:13px;color:var(--graphite);direction:ltr;white-space:nowrap}
+.phase summary p{grid-column:1/-1;margin:0;font-size:15px;color:var(--graphite)}
+.phase .body{border:1px solid var(--ink);border-top:0;padding:18px 22px 8px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:8px 30px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;padding:0;list-style:none}
+.chips li{margin:0;font-size:13.5px;border:1px solid var(--rule);padding:2px 10px;background:var(--paper);line-height:1.8}
+.out{border:1.5px dashed var(--trace);padding:12px 16px;margin-bottom:14px;font-size:15px}
+.out b{display:block;color:var(--trace);font-size:13.5px;margin-bottom:2px}
+.done{background:var(--green-soft);padding:12px 16px;font-size:15px;margin-bottom:14px}
+.done b{display:block;color:var(--green);font-size:13.5px;margin-bottom:2px}
+.ai{font-size:14.5px;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:10px;grid-column:1/-1}
+.ai b{color:var(--ink)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;border:1.5px solid var(--ink);margin:6px 0 18px;background:#fff;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.7}
+th,td{padding:11px 14px;text-align:right;vertical-align:top;border-bottom:1px solid var(--rule-soft);border-inline-start:1px solid var(--rule-soft)}
+th:first-child,td:first-child{border-inline-start:0}
+thead th{background:var(--ink);color:#fff;font-weight:600;font-size:13.5px;white-space:nowrap;position:sticky;top:0}
+tbody tr:hover td{background:#FAFCFE}
+tbody th{background:var(--trace-soft);color:var(--ink);font-weight:700;text-align:right}
+.cmp{min-width:1640px}
+.cmp td{white-space:nowrap}
+.cmp td:nth-child(8){min-width:220px;white-space:normal}
+.cmp td:nth-child(n+9){min-width:190px;white-space:normal}
+.cmp tbody th{position:sticky;right:0;z-index:1;min-width:170px;border-inline-end:1.5px solid var(--ink)}
+.cmp tbody th small{display:block;font-weight:400;color:var(--graphite);font-size:12.5px;font-family:var(--mono);direction:ltr;text-align:right}
+.cmp tbody tr.pick th{background:var(--amber-soft);box-shadow:inset -5px 0 0 var(--ink)}
+.cmp tbody tr.pick td{background:#FFFBF0}
+.cmp tr.pick th::after{content:"موصى بها";display:inline-block;margin-top:6px;font-size:12px;font-weight:600;color:#fff;background:var(--ink);padding:1px 8px}
+.meter{display:inline-flex;gap:3px;direction:rtl;vertical-align:middle}
+.meter i{width:11px;height:11px;border:1.5px solid var(--ink);display:block}
+.meter i.f{background:var(--ink)}
+.meter.r i.f{background:var(--red);border-color:var(--red)}
+.meter.g i.f{background:var(--green);border-color:var(--green)}
+.na{color:var(--graphite);font-size:13px}
+.users{font-weight:600;color:var(--ink)}
+.users small{display:block;font-weight:400;color:var(--graphite);font-size:12.5px}
+.keys{display:flex;flex-wrap:wrap;gap:18px;font-size:13.5px;color:var(--graphite);margin:-4px 0 18px}
+.keys span{display:inline-flex;align-items:center;gap:8px}
+
+/* ---------- architecture spec ---------- */
+.arch{border:1px solid var(--rule);margin-bottom:16px;background:#fff}
+.arch.pick{border:2px solid var(--ink)}
+.arch header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 18px;align-items:start;padding:16px 22px;border-bottom:1px solid var(--rule)}
+.arch header h3{font-size:20px}
+.arch header .en{font-family:var(--mono);font-size:13px;color:var(--graphite);direction:ltr;display:block;text-align:right}
+.arch header p{grid-column:1/-1;margin:0;font-size:15.5px}
+.tag{font-size:13px;font-weight:600;padding:4px 10px;border:1.5px solid var(--ink);white-space:nowrap;align-self:start}
+.tag.rec{background:var(--ink);color:#fff}
+.tag.adv{border-color:var(--red);color:var(--red)}
+.pc{display:grid;grid-template-columns:1fr 1fr}
+.pc > div{padding:14px 22px}
+.pc > div + div{border-inline-start:1px solid var(--rule)}
+.pc h4{font-size:14.5px;margin-bottom:6px}
+.pc .plus h4{color:var(--green)}
+.pc .minus h4{color:var(--red)}
+.pc ul{list-style:none;padding:0;margin:0;font-size:15px}
+.pc li{position:relative;padding-inline-start:20px;margin-bottom:5px}
+.pc .plus li::before{content:"+";position:absolute;inset-inline-start:0;color:var(--green);font-weight:700}
+.pc .minus li::before{content:"−";position:absolute;inset-inline-start:0;color:var(--red);font-weight:700}
+.arch footer{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;padding:12px 22px;border-top:1px dashed var(--rule);font-size:14.5px;background:var(--paper)}
+.arch footer dt{font-weight:700;color:var(--ink)}
+.arch footer dd{margin:0}
+.diagram{direction:ltr;font-family:var(--mono);font-size:12.5px;color:var(--ink);background:var(--paper);border:1px solid var(--rule);padding:10px 14px;margin:0 22px 14px;white-space:pre;overflow-x:auto;line-height:1.55}
+
+/* ---------- scaling ---------- */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border:1.5px solid var(--ink);margin:10px 0 22px;background:#fff}
+.calc .in{padding:20px 22px;border-inline-end:1.5px solid var(--ink);display:grid;gap:14px}
+.calc label{display:grid;gap:4px;font-size:14.5px;font-weight:600;color:var(--ink)}
+.calc label small{font-weight:400;color:var(--graphite);font-size:13px}
+.calc input{font:500 16px var(--mono);padding:9px 12px;border:1.5px solid var(--rule);direction:ltr;text-align:right;width:100%;background:var(--paper);color:var(--ink);border-radius:2px}
+.calc input:focus{border-color:var(--trace);outline:none;box-shadow:0 0 0 3px var(--trace-soft)}
+.calc .res{padding:20px 22px;display:grid;gap:12px;align-content:start}
+.calc .res div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:1px dashed var(--rule);padding-bottom:8px;font-size:14.5px}
+.calc .res b{font-family:var(--mono);font-weight:500;font-size:20px;color:var(--ink);direction:ltr}
+.calc .res .stage{display:block;border:0;background:var(--trace-soft);padding:12px 14px;font-size:15px}
+.calc .res .stage strong{color:var(--ink)}
+tr.hit td,tr.hit th{background:var(--amber-soft)!important}
+tr.hit th{box-shadow:inset -4px 0 0 var(--amber)}
+
+/* ---------- picker ---------- */
+.picker{border:1.5px solid var(--ink);background:#fff;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.picker .qs{padding:20px 22px;border-inline-end:1.5px solid var(--ink)}
+.q{margin-bottom:18px}
+.q > span{display:block;font-weight:700;color:var(--ink);font-size:15px;margin-bottom:8px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:500 14px/1.4 var(--sans);padding:8px 12px;border:1.5px solid var(--rule);background:#fff;color:var(--ink-2);cursor:pointer;border-radius:2px}
+.seg button:hover{border-color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.answer{padding:22px 24px;background:var(--paper)}
+.answer h3{font-size:24px;margin-bottom:6px}
+.answer .why{font-size:15.5px;margin-bottom:14px}
+.answer dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;margin:0 0 14px;font-size:14.5px}
+.answer dt{font-weight:700;color:var(--ink)}
+.answer dd{margin:0}
+.answer .avoid{border-inline-start:3px solid var(--red);background:var(--red-soft);padding:10px 14px;font-size:14.5px}
+
+/* ---------- workflow ---------- */
+.flow{list-style:none;padding:0;margin:0;counter-reset:f;border:1px solid var(--rule)}
+.flow > li{counter-increment:f;display:grid;grid-template-columns:54px minmax(0,1fr) minmax(0,.9fr);gap:0;margin:0;border-top:1px solid var(--rule)}
+.flow > li:first-child{border-top:0}
+.flow > li::before{content:counter(f);font:500 18px/1 var(--mono);color:var(--ink);display:flex;align-items:flex-start;justify-content:center;padding-top:18px;background:var(--trace-soft);border-inline-end:1px solid var(--rule)}
+.flow .w{padding:14px 18px}
+.flow .w h4{font-size:16.5px;margin-bottom:4px;font-family:var(--kufi);font-weight:600}
+.flow .w p{font-size:15px;margin:0}
+.flow .f{padding:14px 18px;border-inline-start:1px dashed var(--rule);font-size:14px;color:var(--graphite)}
+.flow .f code{display:inline-block;margin:2px 0}
+.session{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1.5px solid var(--ink);margin:10px 0 18px}
+.session > div{padding:16px 20px}
+.session > div + div{border-inline-start:1px solid var(--rule)}
+.session h4{font-family:var(--kufi);font-size:17px;margin-bottom:8px}
+.session ol{margin:0;padding-inline-start:20px;font-size:14.5px}
+
+/* ---------- files ---------- */
+.tree{border:1.5px solid var(--ink);background:#fff;margin:6px 0 20px}
+.tree .row{display:grid;grid-template-columns:minmax(220px,.9fr) minmax(0,1.4fr) 132px;border-top:1px solid var(--rule-soft);font-size:14.5px}
+.tree .row:first-child{border-top:0}
+.tree .row.head{background:var(--ink);color:#fff;font-weight:600;font-size:13.5px}
+.tree .row > div{padding:8px 14px}
+.tree .row > div + div{border-inline-start:1px solid var(--rule-soft)}
+.tree .path{font-family:var(--mono);font-size:13px;direction:ltr;text-align:left;color:var(--ink);white-space:nowrap}
+.tree .path.d1{padding-left:34px}
+.tree .path.d2{padding-left:58px}
+.tree .path.dir{font-weight:500;color:var(--trace)}
+.tree .row.key{background:var(--amber-soft)}
+.tree .when{font-size:12.5px;color:var(--graphite)}
+.tpl{border:1.5px solid var(--ink);margin:0 0 18px;background:#fff}
+.tpl header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-bottom:1px solid var(--rule);background:var(--paper)}
+.tpl header span{font-family:var(--mono);font-size:13.5px;color:var(--ink);direction:ltr}
+.tpl header em{font-style:normal;font-size:13.5px;color:var(--graphite);margin-inline-start:10px;font-family:var(--sans);direction:rtl}
+.copy{font:600 13px var(--sans);padding:6px 12px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;border-radius:2px}
+.copy:hover{background:var(--trace-soft)}
+.copy.ok{background:var(--green);border-color:var(--green);color:#fff}
+.tpl pre{margin:0;padding:16px 18px;direction:ltr;text-align:left;font:13px/1.7 var(--mono);color:var(--ink);overflow-x:auto;white-space:pre;max-height:440px}
+.tpl pre .c{color:var(--graphite)}
+.tpl pre .h{color:var(--trace);font-weight:500}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border:1.5px solid var(--ink);border-bottom:0;width:fit-content;max-width:100%}
+.tabs button{font:600 14px var(--mono);padding:9px 14px;border:0;border-inline-start:1px solid var(--rule);background:#fff;color:var(--ink-2);cursor:pointer;direction:ltr}
+.tabs button:first-child{border-inline-start:0}
+.tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
+.tabpanel[hidden]{display:none}
+.tabpanel .tpl{margin-top:0}
+
+/* ---------- rules & checklist ---------- */
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--rule);margin-bottom:24px}
+.rules > div{padding:16px 20px;border-top:1px solid var(--rule)}
+.rules > div:nth-child(-n+2){border-top:0}
+.rules > div:nth-child(even){border-inline-start:1px solid var(--rule)}
+.rules h4{font-size:15.5px;margin-bottom:4px}
+.rules p{font-size:14.5px;margin:0;color:var(--ink-2)}
+.check{border:1.5px solid var(--ink);background:#fff}
+.check header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;border-bottom:1.5px solid var(--ink)}
+.check header h3{font-size:18px}
+.check header b{font-family:var(--mono);font-weight:500;color:var(--ink);direction:ltr}
+.check .meterline{height:6px;background:var(--rule-soft);margin:0}
+.check .meterline i{display:block;height:100%;width:0;background:var(--green);transition:width .25s}
+.check ul{list-style:none;padding:8px 0;margin:0;columns:2;column-gap:0}
+.check li{break-inside:avoid;margin:0}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:7px 18px;font-size:14.5px;cursor:pointer}
+.check label:hover{background:var(--paper)}
+.check input{width:17px;height:17px;margin-top:5px;accent-color:var(--green);flex:none}
+.check input:checked + span{color:var(--graphite);text-decoration:line-through;text-decoration-color:var(--rule)}
+
+.pitfalls td:first-child{color:var(--red);font-weight:600;width:34%}
+.pitfalls td:nth-child(2){width:66%}
+
+footer.end{border-top:1.5px solid var(--ink);padding-top:16px;font-size:14px;color:var(--graphite);max-width:60em}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:20px;padding:16px 14px 60px}
+  .index{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;padding:0;border-width:1.5px}
+  .index h2,.index .legend{display:none}
+  .index ol{display:flex;overflow-x:auto;padding:0;scrollbar-width:none}
+  .index ol::-webkit-scrollbar{display:none}
+  .index a{display:flex;gap:8px;white-space:nowrap;padding:10px 14px;border-inline-start:0;border-bottom:3px solid transparent;font-size:13.5px}
+  .index a.on{border-bottom-color:var(--trace)}
+  html{scroll-padding-top:calc(60px + env(safe-area-inset-top,0px))}
+  .hero{grid-template-columns:1fr;padding:30px 24px 22px}
+  .elevation{max-width:480px;margin:0 auto}
+}
+@media (max-width:760px){
+  body{font-size:16px}
+  .sheet{padding:0 18px 26px}
+  .titleblock{grid-template-columns:72px minmax(0,1fr)}
+  .titleblock .no b{font-size:18px}
+  .titleblock .tt{padding:12px 14px}
+  .truths,.rhythm,.session{grid-template-columns:1fr}
+  .truths div,.rhythm div,.session > div + div{border-inline-start:0;border-top:1px solid var(--rule)}
+  .truths div:first-child,.rhythm div:first-child{border-top:0}
+  .phases{padding-inline-start:38px}
+  .phase::before{inset-inline-start:-38px;width:28px;height:28px;line-height:24px;font-size:12px}
+  .phases::before{inset-inline-start:13px}
+  .phase .body{grid-template-columns:1fr;padding:14px 14px 6px}
+  .pc{grid-template-columns:1fr}
+  .pc > div + div{border-inline-start:0;border-top:1px solid var(--rule)}
+  .arch header,.pc > div,.arch footer{padding-inline:16px}
+  .diagram{margin-inline:16px}
+  .calc,.picker{grid-template-columns:1fr}
+  .calc .in,.picker .qs{border-inline-end:0;border-bottom:1.5px solid var(--ink)}
+  .flow > li{grid-template-columns:42px minmax(0,1fr)}
+  .flow .f{grid-column:2;border-inline-start:0;border-top:1px dashed var(--rule)}
+  .rules{grid-template-columns:1fr}
+  .rules > div:nth-child(even){border-inline-start:0}
+  .rules > div:nth-child(2){border-top:1px solid var(--rule)}
+  .check ul{columns:1}
+  .tree .row{grid-template-columns:minmax(0,1fr)}
+  .tree .row.head,.tree .when{display:none}
+  .tree .row > div + div{border-inline-start:0;padding-top:0;font-size:14px;color:var(--ink-2)}
+  .tree .path{padding-bottom:2px;white-space:normal;word-break:break-all}
+}
+@media print{
+  body{background:#fff}
+  .index,.actions,.copy{display:none}
+  .shell{display:block}
+  .sheet,.hero{break-inside:auto;border-width:1px}
+  .phase .body{display:grid!important}
+}
+</style>
+</head>
+<body>
+<header class="brand" aria-label="Mohamed Reyad ? ???? ????">
+  <div>
+    <p class="brand-name">???? ???? <span lang="en" dir="ltr">/ Mohamed Reyad</span></p>
+    <p class="brand-tagline" lang="en" dir="ltr">STRATEGY ? DESIGN ? TECHNOLOGY</p>
+    <p style="margin:8px 0 0;font-size:13px" lang="en" dir="ltr">Digital Marketing ? Web Design ? AI / Vibe Coding</p>
+  </div>
+  <nav class="brand-links" aria-label="????? ???? ????">
+    <a href="https://reyad.site/">?????? / Portfolio</a>
+    <a href="https://github.com/reyad-dev" lang="en" dir="ltr">GitHub @reyad-dev</a>
+    <a href="https://www.linkedin.com/in/mohamed-reyad-marketing/" lang="en">LinkedIn</a>
+  </nav>
+</header>
+<div class="shell">
+<nav class="index" aria-label="فهرس اللوحات">
+  <h2>فهرس اللوحات</h2>
+  <ol>
+    <li><a href="#a01"><span>A-01</span><span>قبل أن تبدأ</span></a></li>
+    <li><a href="#a02"><span>A-02</span><span>الخطة التعليمية</span></a></li>
+    <li><a href="#a03"><span>A-03</span><span>الحزمة التقنية</span></a></li>
+    <li><a href="#a04"><span>A-04</span><span>المعماريات بالتفصيل</span></a></li>
+    <li><a href="#a05"><span>A-05</span><span>جدول المقارنة</span></a></li>
+    <li><a href="#a06"><span>A-06</span><span>التوسع وعدد المستخدمين</span></a></li>
+    <li><a href="#a07"><span>A-07</span><span>اختر معمارية مشروعك</span></a></li>
+    <li><a href="#a08"><span>A-08</span><span>منهج المشاريع الكبيرة</span></a></li>
+    <li><a href="#a09"><span>A-09</span><span>ملفات MD والمستودع</span></a></li>
+    <li><a href="#a10"><span>A-10</span><span>القواعد الذهبية</span></a></li>
+    <li><a href="#a11"><span>A-11</span><span>أخطاء Vibe Coding</span></a></li>
+  </ol>
+  <p class="legend">الأرقام في هذا الدليل تقديرية لتطبيق ويب نموذجي. القياس الفعلي لمشروعك هو الحَكَم دائماً.</p>
+</nav>
+
+<main>
+<header class="hero">
+  <div>
+    <h1>من الواجهة إلى النظام الكامل</h1>
+    <p class="lede">دليل عمل لمطوّر Front-end ينتقل إلى بناء مشاريع Full stack: خطة تعلّم من 24 أسبوعاً، ومقارنة صريحة بين المعماريات وحدود تحمّلها، ومنهج لإدارة المشاريع الكبيرة يمنع الفوضى قبل أن تبدأ.</p>
+    <div class="actions">
+      <a class="btn primary" href="#a02">ابدأ بالخطة التعليمية</a>
+      <a class="btn" href="#a07">اختر معمارية لمشروعك</a>
+    </div>
+    <p class="who">مكتوب من زاوية مهندس أنظمة رأى مشاريع تنهار لأنها بُنيت أكبر من حاجتها، وأخرى لأنها لم تُنظَّم من اليوم الأول. الفكرة الحاكمة: ابنِ بسيطاً، نظّم بصرامة، وقِس قبل أن تكبّر.</p>
+  </div>
+
+  <svg class="elevation" viewBox="0 0 460 540" role="img" aria-labelledby="elevT elevD" style="direction:ltr">
+    <title id="elevT">مقطع رأسي لمراحل توسّع النظام</title>
+    <desc id="elevD">سبعة طوابق من خادم واحد حتى تقسيم البيانات، مع عدد المستخدمين النشطين يومياً لكل طابق</desc>
+    <defs>
+      <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="7" stroke="#5D6879" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect x="70" y="480" width="330" height="16" fill="url(#hatch)"/>
+    <line x1="60" y1="480" x2="410" y2="480" stroke="#13284A" stroke-width="2"/>
+
+    <g class="floors">
+      <g class="floor busy"><rect x="130" y="426" width="200" height="54"/><text class="ar" x="230" y="449" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">خادم واحد</text><text class="cap" x="230" y="469" text-anchor="middle" style="direction:rtl">التطبيق وقاعدة البيانات معاً</text></g>
+      <g class="floor busy"><rect x="130" y="372" width="200" height="54"/><text x="230" y="395" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">قاعدة بيانات مُدارة</text><text class="cap" x="230" y="415" text-anchor="middle" style="direction:rtl">فصل البيانات ونسخ احتياطي</text></g>
+      <g class="floor busy"><rect x="130" y="318" width="200" height="54"/><text x="230" y="341" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">كاش وشبكة CDN</text><text class="cap" x="230" y="361" text-anchor="middle" style="direction:rtl">Redis وفهارس وملفات ثابتة</text></g>
+      <g class="floor busy"><rect x="130" y="264" width="200" height="54"/><text x="230" y="287" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">موزّع أحمال</text><text class="cap" x="230" y="307" text-anchor="middle" style="direction:rtl">عدة نسخ من التطبيق</text></g>
+      <g class="floor"><rect x="130" y="210" width="200" height="54"/><text x="230" y="233" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">نسخ قراءة وطوابير</text><text class="cap" x="230" y="253" text-anchor="middle" style="direction:rtl">Replicas وعمّال خلفيون</text></g>
+      <g class="floor"><rect x="130" y="156" width="200" height="54"/><text x="230" y="179" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">خدمات مستقلة وأحداث</text><text class="cap" x="230" y="199" text-anchor="middle" style="direction:rtl">فصل الوحدات الأثقل حملاً</text></g>
+      <g class="floor"><rect x="130" y="102" width="200" height="54"/><text x="230" y="125" text-anchor="middle" font-size="14.5" font-weight="600" style="direction:rtl">تقسيم البيانات ومناطق</text><text class="cap" x="230" y="145" text-anchor="middle" style="direction:rtl">Sharding وتوزيع جغرافي</text></g>
+    </g>
+
+    <g class="late">
+      <line x1="230" y1="102" x2="230" y2="66" stroke="#13284A" stroke-width="1.5"/>
+      <line x1="218" y1="78" x2="242" y2="78" stroke="#13284A" stroke-width="1.5"/>
+      <g class="dim" stroke="#5D6879">
+        <line x1="104" y1="102" x2="104" y2="480" stroke-width="1"/>
+        <line x1="98" y1="480" x2="110" y2="480"/><line x1="98" y1="426" x2="110" y2="426"/>
+        <line x1="98" y1="372" x2="110" y2="372"/><line x1="98" y1="318" x2="110" y2="318"/>
+        <line x1="98" y1="264" x2="110" y2="264"/><line x1="98" y1="210" x2="110" y2="210"/>
+        <line x1="98" y1="156" x2="110" y2="156"/><line x1="98" y1="102" x2="110" y2="102"/>
+        <text x="92" y="484" text-anchor="end" stroke="none">0</text>
+        <text x="92" y="430" text-anchor="end" stroke="none">1K</text>
+        <text x="92" y="376" text-anchor="end" stroke="none">10K</text>
+        <text x="92" y="322" text-anchor="end" stroke="none">100K</text>
+        <text x="92" y="268" text-anchor="end" stroke="none">500K</text>
+        <text x="92" y="214" text-anchor="end" stroke="none">2M</text>
+        <text x="92" y="160" text-anchor="end" stroke="none">10M</text>
+        <text x="92" y="106" text-anchor="end" stroke="none">+</text>
+      </g>
+      <text class="cap" x="104" y="88" text-anchor="middle" style="direction:rtl">مستخدم نشط/يوم</text>
+      <path class="red" d="M342 268 h10 v208 h-10"/>
+      <line class="red" x1="352" y1="372" x2="362" y2="372"/>
+      <text class="redtxt" x="452" y="368" text-anchor="start" style="direction:rtl">أغلب المشاريع</text>
+      <text class="redtxt" x="452" y="386" text-anchor="start" style="direction:rtl">لا تتجاوز هذا</text>
+      <text class="cap" x="230" y="524" text-anchor="middle" style="direction:rtl">مقطع رأسي: لا تبنِ الطابق التالي قبل أن يمتلئ الحالي</text>
+    </g>
+  </svg>
+</header>
+
+<!-- A-01 -->
+<section class="sheet" id="a01">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-01</b></div>
+    <div class="tt"><h2>قبل أن تبدأ</h2><p>ثلاث حقائق تحدد طريقة استخدامك لبقية هذا الدليل.</p></div></div>
+  <div class="truths">
+    <div><h3>خلفيتك ميزة لا عائق</h3><p>أنت تعرف TypeScript والمكونات وتجربة المستخدم. الفجوة الحقيقية في أربعة أشياء فقط: البيانات، والأمان، والتشغيل، وتصميم الأنظمة. هذه الخطة تركّز عليها.</p></div>
+    <div><h3>الذكاء الاصطناعي يضاعف ما عندك</h3><p>يسرّع من يفهم، ويُغرق من لا يفهم في أخطاء لا يراها. القاعدة الثابتة: لا تدمج كوداً لا تستطيع شرحه سطراً سطراً.</p></div>
+    <div><h3>البساطة تربح غالباً</h3><p>معظم المشاريع لا تحتاج Microservices أبداً. ابدأ بمونوليث معياري منظّم، وافصل جزءاً فقط عندما يثبت القياس أنه عنق زجاجة.</p></div>
+  </div>
+</section>
+
+<!-- A-02 -->
+<section class="sheet" id="a02">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-02</b></div>
+    <div class="tt"><h2>الخطة التعليمية: 24 أسبوعاً</h2><p>سبع مراحل متتالية، لكل مرحلة مشروع تسلّمه ومعيار واضح يخبرك أنك أتممتها. افتح أي مرحلة لترى تفاصيلها.</p></div></div>
+
+  <h3 class="sub" style="margin-top:0">إيقاعك الأسبوعي المقترح</h3>
+  <div class="rhythm">
+    <div><b>12–15</b><span>ساعة أسبوعياً، موزعة على 5 أيام</span></div>
+    <div><b>45%</b><span>بناء فعلي بيدك</span></div>
+    <div><b>30%</b><span>دروس وتوثيق رسمي</span></div>
+    <div><b>25%</b><span>قراءة كود الآخرين وكتابة ملاحظاتك</span></div>
+  </div>
+
+  <div class="phases">
+    <details class="phase" data-n="1" open>
+      <summary><h3>الأساسات التي يتجاوزها الجميع</h3><span class="wk">W1–W2</span><p>ما يحدث فعلاً بين المتصفح والخادم، وأدوات العمل اليومية.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>TypeScript بوضع strict</li><li>Generics وUtility Types</li><li>Git: الفروع وrebase وحل التعارضات</li><li>Pull Requests</li><li>الطرفية وأوامر pnpm</li><li>HTTP: الطرق وأكواد الحالة والترويسات</li><li>Cookies وCORS</li><li>DNS وHTTPS</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>أداة سطر أوامر تقرأ API عاماً وتعرض النتائج، مع ملف يشرح دورة حياة طلب HTTP بكلماتك.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>تشرح ما يحدث من كتابة الرابط حتى ظهور الصفحة، وتحل تعارض Git دون قلق.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> في هذه المرحلة اكتب بيدك أولاً، ثم اطلب منه مراجعة ما كتبت وشرح ما فاتك. لا تطلب منه الحل قبل أن تحاول.</p>
+      </div>
+    </details>
+
+    <details class="phase" data-n="2">
+      <summary><h3>الباك إند من الصفر</h3><span class="wk">W3–W6</span><p>بناء API نظيف يتعامل مع الأخطاء ولا ينهار.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>Node.js وحلقة الأحداث</li><li>async/await والوعود</li><li>Hono أو Express</li><li>Routing وMiddleware</li><li>تصميم REST: الموارد والترقيم والفلترة</li><li>التحقق بـ Zod</li><li>معالجة أخطاء مركزية</li><li>Logging منظم بـ pino</li><li>متغيرات البيئة</li><li>توثيق OpenAPI</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>API لإدارة المهام: إنشاء وقراءة وتعديل وحذف، مع بحث وترقيم صفحات وتوثيق OpenAPI.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>تصمم endpoint بأكواد حالة صحيحة، وكل خطأ يعود برسالة واضحة دون أن يسقط الخادم.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> اطلب منه أن يكتب حالات خطأ لم تفكر فيها، ثم اختبر الـ API ضدها بنفسك.</p>
+      </div>
+    </details>
+
+    <details class="phase" data-n="3">
+      <summary><h3>البيانات: قلب كل نظام</h3><span class="wk">W7–W10</span><p>أطول مرحلة وأهمها. أغلب مشاكل الأداء والأعطال تبدأ من هنا.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>SQL خام: JOIN وGROUP BY</li><li>Window Functions</li><li>PostgreSQL</li><li>نمذجة البيانات والتطبيع</li><li>العلاقات والمفاتيح</li><li>الفهارس وEXPLAIN ANALYZE</li><li>Transactions والعزل</li><li>Migrations</li><li>Drizzle أو Prisma</li><li>مشكلة N+1</li><li>أساسيات Redis</li><li>النسخ الاحتياطي والاستعادة</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>قاعدة بيانات متجر: منتجات وطلبات ومخزون، مع خصم مخزون آمن داخل Transaction يمنع البيع المزدوج.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>تكتشف استعلاماً بطيئاً وتصلحه بفهرس، وتعرف لماذا لا تُعدَّل Migration بعد نشرها.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> اكتب SQL بيدك قبل استخدام الـ ORM. اطلب من الذكاء الاصطناعي مراجعة تصميم الجداول وليس كتابته.</p>
+      </div>
+    </details>
+
+    <details class="phase" data-n="4">
+      <summary><h3>الهوية والأمان</h3><span class="wk">W11–W13</span><p>المنطقة التي يسقط فيها أغلب مطوري Vibe Coding دون أن يعلموا.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>Sessions مقابل JWT</li><li>Cookies: httpOnly وSecure وSameSite</li><li>OAuth 2.0 وOIDC</li><li>تشفير كلمات المرور بـ argon2</li><li>الأدوار والصلاحيات RBAC</li><li>OWASP Top 10</li><li>XSS وCSRF وSQL Injection</li><li>IDOR</li><li>Rate Limiting</li><li>إدارة الأسرار</li><li>Row Level Security</li><li>نظام حماية البيانات الشخصية (PDPL)</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>نظام مصادقة كامل: تسجيل، وتأكيد بريد، واستعادة كلمة مرور، ودخول عبر Google، وأدوار وصلاحيات.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>لا يستطيع مستخدم رؤية بيانات غيره بتغيير رقم في الرابط، وتستطيع إثبات ذلك باختبار.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> اطلب منه دور المهاجم: "حاول اختراق هذا الـ endpoint واذكر كل ثغرة". لا تستخدم مكتبة مصادقة تولّدها بنفسك، استخدم مكتبة معروفة.</p>
+      </div>
+    </details>
+
+    <details class="phase" data-n="5">
+      <summary><h3>Full stack الحقيقي</h3><span class="wk">W14–W17</span><p>ربط كل ما سبق في منتج واحد بأنواع موحّدة من قاعدة البيانات حتى الواجهة.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>Next.js App Router</li><li>Server Components مقابل Client</li><li>Server Actions</li><li>التخزين المؤقت وإعادة التحقق</li><li>مخططات Zod مشتركة</li><li>رفع الملفات بروابط موقّعة</li><li>البريد الإلكتروني</li><li>المدفوعات وWebhooks</li><li>Idempotency</li><li>مهام خلفية بـ BullMQ</li><li>تعدد اللغات وRTL</li><li>تعدد المستأجرين</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>SaaS صغير متعدد المستأجرين: فرق عمل، واشتراكات، ورفع ملفات، وفواتير، ولوحة تحكم.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>تبني ميزة كاملة من الجدول حتى الشاشة بأنواع TypeScript موحّدة، دون أي <code>any</code>.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> هنا تبدأ العمل بملف <code>CLAUDE.md</code> ومواصفات الميزات في اللوحة A-09. هذا تدريبك على منهج المشاريع الكبيرة.</p>
+      </div>
+    </details>
+
+    <details class="phase" data-n="6">
+      <summary><h3>الجودة والتشغيل</h3><span class="wk">W18–W20</span><p>الفرق بين مشروع يعمل على جهازك ومشروع يعمل في الإنتاج بثقة.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>هرم الاختبارات</li><li>Vitest للوحدات</li><li>اختبارات تكامل بقاعدة بيانات حقيقية</li><li>Playwright للتجربة الكاملة</li><li>Docker وdocker compose</li><li>GitHub Actions</li><li>بيئات dev وstaging وproduction</li><li>النشر على Vercel وعلى VPS</li><li>Sentry لمراقبة الأخطاء</li><li>Health checks</li><li>اختبار استعادة النسخ الاحتياطية</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>مشروع المرحلة 5 مع CI أخضر، ونشر تلقائي إلى staging ثم production، وتنبيهات أخطاء فورية.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>كل push يُختبر ويُنشر تلقائياً، وتستطيع التراجع عن إصدار سيئ خلال دقائق.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> اطلب الاختبار قبل الكود. اختبار يفشل أولاً ثم كود يجعله ينجح، وهذا يمنع الذكاء الاصطناعي من "الغش" بتعديل الاختبار.</p>
+      </div>
+    </details>
+
+    <details class="phase" data-n="7">
+      <summary><h3>تصميم الأنظمة والتوسع</h3><span class="wk">W21–W24</span><p>التفكير بمستوى Senior: القياس، وعنق الزجاجة، والمفاضلات.</p></summary>
+      <div class="body">
+        <div>
+          <ul class="chips"><li>استراتيجيات الكاش وإبطاله</li><li>CDN</li><li>Load Balancing وتطبيق بلا حالة</li><li>Read Replicas</li><li>Connection Pooling</li><li>الطوابير والمعالجة غير المتزامنة</li><li>WebSockets وSSE</li><li>Redis Pub/Sub</li><li>Outbox Pattern</li><li>حدود الخدمات المصغّرة</li><li>OpenTelemetry</li><li>اختبار الحمل بـ k6</li></ul>
+        </div>
+        <div>
+          <div class="out"><b>ما تسلّمه</b>تطبيق إشعارات أو دردشة لحظي، مع اختبار حمل k6، ووثيقة تصميم نظام تبرر كل قرار بالأرقام.</div>
+          <div class="done"><b>تعرف أنك أتممتها عندما</b>تقيس، وتحدد عنق الزجاجة، وتصلحه، وتُثبت التحسن بالأرقام لا بالتخمين.</div>
+        </div>
+        <p class="ai"><b>مع الذكاء الاصطناعي:</b> استخدمه محاوراً في تصميم الأنظمة: اعرض تصميمك واطلب منه أن يجد أين سينهار عند عشرة أضعاف الحمل.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- A-03 -->
+<section class="sheet" id="a03">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-03</b></div>
+    <div class="tt"><h2>الحزمة التقنية المقترحة لك</h2><p>لغة واحدة من قاعدة البيانات حتى الواجهة: TypeScript. هذا يختصر عليك نصف منحنى التعلم.</p></div></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>الطبقة</th><th>الاختيار الأول</th><th>البديل</th><th>لماذا</th></tr></thead>
+      <tbody>
+        <tr><th>اللغة</th><td><code>TypeScript</code> strict</td><td>Go لاحقاً للخدمات عالية الأداء</td><td>تعرفها، وتوحّد الأنواع بين الخادم والواجهة.</td></tr>
+        <tr><th>إطار Full stack</th><td><code>Next.js</code></td><td><code>Remix</code> / <code>Nuxt</code></td><td>أنضج نظام بيئي، ويعمل كواجهة وBFF معاً.</td></tr>
+        <tr><th>باك إند منفصل</th><td><code>Hono</code> للخفيف، <code>NestJS</code> للكبير</td><td><code>Fastify</code></td><td>NestJS يفرض تنظيماً يناسب الفرق والمشاريع الطويلة.</td></tr>
+        <tr><th>قاعدة البيانات</th><td><code>PostgreSQL</code></td><td><code>MySQL</code></td><td>تغطي العلاقات وJSON والبحث النصي والمواقع الجغرافية في نظام واحد.</td></tr>
+        <tr><th>الوصول للبيانات</th><td><code>Drizzle</code></td><td><code>Prisma</code></td><td>Drizzle قريب من SQL فتتعلم الأساس، وPrisma أسهل للبداية.</td></tr>
+        <tr><th>التحقق</th><td><code>Zod</code></td><td><code>Valibot</code></td><td>مخطط واحد يتحقق في الخادم والنموذج معاً.</td></tr>
+        <tr><th>المصادقة</th><td><code>Better Auth</code></td><td><code>Auth.js</code> / خدمة مُدارة مثل Clerk</td><td>تملك بياناتك داخل قاعدتك، دون كتابة منطق تشفير بنفسك.</td></tr>
+        <tr><th>الكاش والطوابير</th><td><code>Redis</code> + <code>BullMQ</code></td><td><code>RabbitMQ</code> عند الكِبر</td><td>تغطي الكاش والمهام الخلفية وحدود المعدل من أداة واحدة.</td></tr>
+        <tr><th>تخزين الملفات</th><td>S3 أو Cloudflare R2</td><td>Supabase Storage</td><td>روابط رفع موقّعة تخفف الحمل عن خادمك.</td></tr>
+        <tr><th>الاختبارات</th><td><code>Vitest</code> + <code>Playwright</code></td><td><code>Jest</code></td><td>سريعة ومتوافقة مع أدوات الواجهة التي تعرفها.</td></tr>
+        <tr><th>المستودع</th><td><code>pnpm</code> + <code>Turborepo</code></td><td><code>Nx</code></td><td>واجهة وخادم وحزم مشتركة في مستودع واحد منظم.</td></tr>
+        <tr><th>النشر</th><td>Vercel للبداية، Docker على VPS للتحكم</td><td>Railway / Fly.io / Coolify</td><td>ابدأ بالأسهل، وانتقل حين تبرر التكلفة أو المتطلبات ذلك.</td></tr>
+        <tr><th>المراقبة</th><td><code>Sentry</code></td><td>Grafana + OpenTelemetry</td><td>اعرف الخطأ قبل أن يخبرك به العميل.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>للمشاريع داخل السعودية:</b> راجع متطلبات نظام حماية البيانات الشخصية ومتطلبات الجهات الحكومية بشأن مكان استضافة البيانات قبل اختيار مزود السحابة، خاصة في المشاريع الحكومية والصحية والمالية.</div>
+</section>
+<!-- A-04 -->
+<section class="sheet" id="a04">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-04</b></div>
+    <div class="tt"><h2>المعماريات بالتفصيل</h2><p>نوعان مختلفان يخلط بينهما كثيرون: معمارية النظام (كيف يُنشر ويتوسع) وتنظيم الكود (كيف تُرتّب الملفات داخله).</p></div></div>
+
+  <h3 class="sub" style="margin-top:0">أولاً: معماريات النظام</h3>
+
+  <article class="arch">
+    <header><div><h3>المونوليث الطبقي</h3><span class="en">Layered Monolith</span></div><span class="tag">نقطة البداية</span>
+      <p>تطبيق واحد، وقاعدة بيانات واحدة، ونشر واحد. الكود مقسّم إلى طبقات: واجهة ثم منطق ثم بيانات.</p></header>
+    <pre class="diagram">[ Browser ] ──► [ App: UI + API + Logic ] ──► [ PostgreSQL ]</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>أسرع طريق من الفكرة إلى الإنتاج</li><li>تصحيح الأخطاء سهل: كل شيء في مكان واحد</li><li>Transactions بسيطة في قاعدة بيانات واحدة</li><li>أقل تكلفة تشغيل ممكنة</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>يتحول إلى "كرة طين" إذا لم تُرسم حدود داخلية</li><li>يتوسع ككتلة واحدة حتى لو جزء واحد هو الثقيل</li><li>الفرق الكبيرة تتصادم في النشر والملفات</li></ul></div>
+    </div>
+    <footer><dt>متى تختاره</dt><dd>MVP، أدوات داخلية، مشروع فردي بنطاق واضح.</dd><dt>الأدوات</dt><dd>Next.js full stack، أو Laravel / Django / Rails.</dd></footer>
+  </article>
+
+  <article class="arch pick">
+    <header><div><h3>المونوليث المعياري</h3><span class="en">Modular Monolith</span></div><span class="tag rec">توصيتي الافتراضية</span>
+      <p>نشر واحد، لكن الكود مقسّم إلى وحدات بحدود صارمة (المستخدمون، الفوترة، المشاريع). كل وحدة تملك بياناتها، ولا تتواصل مع غيرها إلا عبر واجهة عامة.</p></header>
+    <pre class="diagram">┌────────────── App (one deploy) ──────────────┐
+│  users/    billing/    projects/    notify/  │
+│  each module exposes only its index.ts       │
+└──────────────────────┬───────────────────────┘
+                       ▼
+          PostgreSQL (one schema per module)</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>بساطة المونوليث مع تنظيم الخدمات المصغّرة</li><li>أي وحدة يمكن فصلها لاحقاً كخدمة مستقلة بأقل جهد</li><li>مثالي للعمل مع الذكاء الاصطناعي: السياق محصور في وحدة واحدة</li><li>يكبر مع الفريق حتى عشرات المطورين</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>يحتاج انضباطاً لمنع الاستيراد عبر الحدود (يُفرض بأدوات lint)</li><li>ما زال نشراً واحداً: خطأ في وحدة قد يوقف الكل</li><li>تخطيط الحدود يتطلب تفكيراً مسبقاً</li></ul></div>
+    </div>
+    <footer><dt>متى تختاره</dt><dd>SaaS، أنظمة الشركات، المتاجر، المنصات المتوسطة والكبيرة. Shopify من أشهر الأمثلة على هذا النمط بحجم ضخم.</dd><dt>الأدوات</dt><dd>Next.js أو NestJS، PostgreSQL، Turborepo، و<code>eslint-plugin-boundaries</code> لفرض الحدود.</dd></footer>
+  </article>
+
+  <article class="arch">
+    <header><div><h3>Serverless والمنصات الجاهزة</h3><span class="en">Serverless / BaaS</span></div><span class="tag">للإطلاق السريع</span>
+      <p>لا تدير خوادم. دوال تعمل عند الطلب (Vercel، Cloudflare Workers، AWS Lambda) أو منصة جاهزة مثل Supabase وFirebase توفر قاعدة البيانات والمصادقة والتخزين.</p></header>
+    <pre class="diagram">[ Client ] ─► [ Edge / CDN ] ─► [ fn /api/orders ] ─┐
+                               [ fn /api/users  ] ─┴─► [ Managed DB + Auth + Storage ]</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>إطلاق خلال أيام</li><li>لا صيانة خوادم ولا تحديثات نظام</li><li>تتوسع تلقائياً مع الذروات</li><li>شبه مجانية في البداية</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>ارتباط بالمزود يصعّب الخروج لاحقاً</li><li>الفاتورة تقفز بسرعة مع النمو</li><li>بداية باردة وحدود زمن التنفيذ</li><li>ضعيفة مع المهام الطويلة والاتصالات المستمرة</li><li>أخطاء أمنية شائعة مثل ترك Row Level Security معطلاً</li></ul></div>
+    </div>
+    <footer><dt>متى تختارها</dt><dd>MVP لاختبار فكرة، مشاريع جانبية، تطبيقات بحمل متقطع.</dd><dt>شرط مهم</dt><dd>اكتب منطقك في طبقة مستقلة عن المزود حتى تستطيع الانتقال إن احتجت.</dd></footer>
+  </article>
+
+  <article class="arch">
+    <header><div><h3>الموقع الثابت أولاً</h3><span class="en">JAMstack / Static-first</span></div><span class="tag">للمحتوى</span>
+      <p>الصفحات تُبنى مسبقاً وتُوزّع عبر CDN، والأجزاء المتغيرة تأتي من API أو نظام إدارة محتوى منفصل.</p></header>
+    <pre class="diagram">build ─► static HTML ─► CDN ─► Browser ─(fetch)─► API / Headless CMS</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>أسرع أداء ممكن وSEO ممتاز</li><li>سطح هجوم صغير جداً</li><li>تكلفة استضافة شبه صفرية</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>غير مناسب لبيانات مخصصة لكل مستخدم أو متغيرة كل ثانية</li><li>زمن البناء يطول مع آلاف الصفحات</li></ul></div>
+    </div>
+    <footer><dt>متى تختاره</dt><dd>مواقع الشركات، المدونات، صفحات الهبوط، التوثيق، كتالوج منتجات.</dd><dt>الأدوات</dt><dd>Astro، أو Next.js بالتوليد الثابت، مع Headless CMS مثل Sanity أو Payload.</dd></footer>
+  </article>
+
+  <article class="arch">
+    <header><div><h3>خلفية مخصصة لكل واجهة</h3><span class="en">BFF — Backend for Frontend</span></div><span class="tag">نمط مكمّل</span>
+      <p>طبقة خلفية رفيعة لكل نوع واجهة (ويب، جوال) تجمع البيانات من الخدمات وتشكّلها كما تحتاجها الواجهة تماماً.</p></header>
+    <pre class="diagram">[ Web ]    ─► [ Web BFF ]    ─┐
+                              ├─► [ Services / DB ]
+[ Mobile ] ─► [ Mobile BFF ] ─┘</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>طلبات أقل وأخف لتطبيق الجوال</li><li>المفاتيح والأسرار تبقى على الخادم</li><li>كل واجهة تتطور دون كسر الأخرى</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>طبقة إضافية للصيانة والنشر</li><li>تكرار المنطق إن وُضعت قواعد العمل فيها خطأً</li></ul></div>
+    </div>
+    <footer><dt>متى تختاره</dt><dd>عندما يكون لديك ويب وجوال على نفس البيانات. ملاحظة: Route Handlers في Next.js تعمل كـ BFF بشكل طبيعي.</dd></footer>
+  </article>
+
+  <article class="arch">
+    <header><div><h3>المعمارية الموجهة بالأحداث</h3><span class="en">Event-Driven Architecture</span></div><span class="tag adv">متقدمة</span>
+      <p>مكوّن ينشر حدثاً مثل "تم إنشاء طلب"، ومكوّنات أخرى تستمع وتتصرف بشكل غير متزامن دون أن يعرف بعضها بعضاً.</p></header>
+    <pre class="diagram">[ Orders ] ── OrderPlaced ──► [ Broker ] ──► [ Email ]
+                                        ├──► [ Inventory ]
+                                        └──► [ Analytics ]</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>يمتص الذروات الضخمة عبر الطوابير</li><li>فصل قوي: تضيف مستهلكاً جديداً دون لمس المنتج</li><li>ممتازة للتكاملات والتحليلات والإشعارات</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>تتبع مسار الطلب عبر الأحداث صعب</li><li>اتساق نهائي لا فوري</li><li>رسائل مكررة أو بترتيب خاطئ يجب التعامل معها</li></ul></div>
+    </div>
+    <footer><dt>متى تختارها</dt><dd>غالباً كمكمّل داخل معمارية أخرى: المدفوعات، الإشعارات، المعالجة الثقيلة.</dd><dt>التدرج</dt><dd>BullMQ داخل المونوليث، ثم RabbitMQ، ثم Kafka عند الأحجام الضخمة.</dd></footer>
+  </article>
+
+  <article class="arch">
+    <header><div><h3>الخدمات المصغّرة</h3><span class="en">Microservices</span></div><span class="tag adv">للفرق الكبيرة</span>
+      <p>خدمات مستقلة، لكل منها قاعدة بياناتها ونشرها وفريقها، تتواصل عبر API أو رسائل.</p></header>
+    <pre class="diagram">            ┌─► [ Users svc ]   ─► DB
+[ Gateway ] ├─► [ Orders svc ]  ─► DB
+            └─► [ Payment svc ] ─► DB
+         ◄── async events via Kafka / RabbitMQ ──►</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>توسيع كل خدمة حسب حملها</li><li>فرق مستقلة تنشر دون انتظار بعضها</li><li>عزل الأعطال إن صُممت جيداً</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>تعقيد تشغيلي هائل: شبكة ومراقبة وتتبع موزّع</li><li>Transactions موزعة صعبة جداً</li><li>تكلفة بنية تحتية وفريق DevOps</li><li>التقسيم الخاطئ ينتج "مونوليث موزّع" وهو أسوأ الحالتين</li></ul></div>
+    </div>
+    <footer><dt>متى تختارها</dt><dd>منصات ضخمة بفرق متعددة (<bdi dir="ltr">20–30</bdi> مطوراً فأكثر) وأحمال متفاوتة جداً بين الأجزاء. الطريق الآمن إليها: ابدأ معيارياً ثم افصل.</dd><dt>الأدوات</dt><dd>NestJS أو Go، Kubernetes، API Gateway، Kafka، OpenTelemetry.</dd></footer>
+  </article>
+
+  <article class="arch">
+    <header><div><h3>الواجهات المصغّرة</h3><span class="en">Micro-frontends</span></div><span class="tag adv">نادراً ما تلزم</span>
+      <p>تقسيم الواجهة إلى تطبيقات مستقلة لكل فريق، تُجمع في صفحة واحدة.</p></header>
+    <pre class="diagram">[ Shell app ] ─► [ Catalog (team A) ] [ Cart (team B) ] [ Account (team C) ]</pre>
+    <div class="pc">
+      <div class="plus"><h4>نقاط القوة</h4><ul><li>كل فريق واجهة يعمل وينشر باستقلال</li></ul></div>
+      <div class="minus"><h4>نقاط الضعف</h4><ul><li>حجم تحميل أكبر وأداء أضعف</li><li>تضارب في التصميم والإصدارات</li><li>لا فائدة منها لفريق صغير إطلاقاً</li></ul></div>
+    </div>
+    <footer><dt>متى تختارها</dt><dd>فقط عند وجود ثلاثة فرق واجهات أو أكثر على منتج واحد ضخم.</dd></footer>
+  </article>
+
+  <h3 class="sub">ثانياً: تنظيم الكود داخل التطبيق</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>النمط</th><th>الفكرة</th><th>متى تستخدمه</th><th>الثمن</th></tr></thead>
+      <tbody>
+        <tr><th>الطبقات<br><code>Controller → Service → Repository</code></th><td>كل طبقة لها مسؤولية: استقبال الطلب، منطق العمل، الوصول للبيانات.</td><td>أغلب المشاريع الصغيرة والمتوسطة.</td><td>منخفض، لكن الملفات تتوزع بعيداً عن الميزة.</td></tr>
+        <tr><th>حسب الميزة<br><code>Feature-based / Vertical Slice</code></th><td>كل ميزة في مجلد يضم ملفاتها كلها: المسار والمنطق والبيانات والاختبار.</td><td>الأقرب لعقلية مطور الواجهة، والأفضل مع الذكاء الاصطناعي.</td><td>منخفض، مع خطر تكرار بسيط بين الميزات.</td></tr>
+        <tr><th>المعمارية النظيفة / السداسية<br><code>Clean / Hexagonal</code></th><td>منطق العمل في المركز لا يعرف الإطار ولا قاعدة البيانات، ويتصل بهما عبر منافذ ومحوّلات.</td><td>مجال أعمال معقد، مشروع يعيش سنوات، حاجة عالية للاختبار.</td><td>ملفات وطبقات أكثر، وبطء في البداية.</td></tr>
+        <tr><th>فصل القراءة عن الكتابة<br><code>CQRS (+ Event Sourcing)</code></th><td>نماذج منفصلة للقراءة والكتابة، وقد تُخزّن الأحداث بدل الحالة.</td><td>أنظمة مالية تحتاج سجل تدقيق كامل، أو فارق ضخم بين القراءة والكتابة.</td><td>تعقيد كبير؛ لا تبدأ به أبداً.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note good"><b>التركيبة التي أوصي بها لمعظم مشاريعك:</b> مونوليث معياري، وداخل كل وحدة تنظيم حسب الميزة، مع طبقات خفيفة (المسار ← الخدمة ← المستودع). وعندما تكون وحدة ما معقدة جداً، طبّق عليها وحدها المعمارية النظيفة.</div>
+</section>
+
+<!-- A-05 -->
+<section class="sheet" id="a05">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-05</b></div>
+    <div class="tt"><h2>جدول المقارنة الشامل</h2><p>اسحب الجدول أفقياً على الشاشات الصغيرة. عمود المعمارية ثابت أثناء السحب.</p></div></div>
+  <div class="keys">
+    <span><span class="meter g" data-v="4"></span> كلما امتلأ كان أفضل</span>
+    <span><span class="meter r" data-v="4"></span> كلما امتلأ كان أصعب أو أغلى</span>
+  </div>
+  <div class="tablewrap">
+    <table class="cmp">
+      <thead><tr><th>المعمارية</th><th>صعوبة البناء</th><th>سرعة الإطلاق</th><th>تكلفة التشغيل</th><th>قابلية التوسع</th><th>سهولة التصحيح</th><th>حجم الفريق</th><th>المستخدمون النشطون يومياً (تقديري)</th><th>القوة الأبرز</th><th>الضعف الأبرز</th><th>الأنسب لـ</th></tr></thead>
+      <tbody>
+        <tr><th>المونوليث الطبقي<small>Monolith</small></th><td><span class="meter r" data-v="1"></span></td><td><span class="meter g" data-v="5"></span></td><td><span class="meter r" data-v="1"></span></td><td><span class="meter g" data-v="3"></span></td><td><span class="meter g" data-v="5"></span></td><td><bdi dir="ltr">1–8</bdi></td><td class="users">حتى ~100K<small>على خادم قوي؛ حتى ~1M مع نسخ متعددة وكاش</small></td><td>أسرع طريق للإنتاج</td><td>يتحول إلى فوضى بلا حدود داخلية</td><td>MVP، أدوات داخلية، مشروع فردي</td></tr>
+        <tr class="pick"><th>المونوليث المعياري<small>Modular Monolith</small></th><td><span class="meter r" data-v="2"></span></td><td><span class="meter g" data-v="4"></span></td><td><span class="meter r" data-v="2"></span></td><td><span class="meter g" data-v="4"></span></td><td><span class="meter g" data-v="4"></span></td><td><bdi dir="ltr">1–40</bdi></td><td class="users">حتى عدة ملايين<small>مع توسع أفقي ونسخ قراءة</small></td><td>تنظيم الخدمات ببساطة المونوليث</td><td>يحتاج انضباطاً في الحدود</td><td>SaaS، أنظمة الشركات، المتاجر، المنصات</td></tr>
+        <tr><th>Serverless / BaaS<small>Supabase, Firebase, Lambda</small></th><td><span class="meter r" data-v="1"></span></td><td><span class="meter g" data-v="5"></span></td><td><span class="meter r" data-v="2"></span></td><td><span class="meter g" data-v="4"></span></td><td><span class="meter g" data-v="2"></span></td><td><bdi dir="ltr">1–5</bdi></td><td class="users">حتى ~300K<small>تقنياً أكثر، لكن الفاتورة تصبح المشكلة</small></td><td>إطلاق في أيام بلا خوادم</td><td>ارتباط بالمزود وتكلفة تقفز</td><td>اختبار فكرة، مشاريع جانبية</td></tr>
+        <tr><th>الموقع الثابت أولاً<small>JAMstack</small></th><td><span class="meter r" data-v="1"></span></td><td><span class="meter g" data-v="5"></span></td><td><span class="meter r" data-v="1"></span></td><td><span class="meter g" data-v="5"></span></td><td><span class="meter g" data-v="4"></span></td><td><bdi dir="ltr">1–5</bdi></td><td class="users">ملايين للمحتوى<small>الجزء الديناميكي يتبع الـ API خلفه</small></td><td>أداء وأمان وتكلفة شبه صفرية</td><td>ضعيف مع بيانات كل مستخدم</td><td>مواقع شركات، مدونات، صفحات هبوط</td></tr>
+        <tr><th>BFF<small>Backend for Frontend</small></th><td><span class="meter r" data-v="2"></span></td><td><span class="meter g" data-v="4"></span></td><td><span class="meter r" data-v="2"></span></td><td><span class="meter g" data-v="4"></span></td><td><span class="meter g" data-v="3"></span></td><td><bdi dir="ltr">2+</bdi></td><td class="users">يتبع ما خلفه<small>طبقة تنسيق لا تحدد السقف</small></td><td>واجهات أبسط وطلبات أقل</td><td>طبقة إضافية للصيانة</td><td>ويب وجوال على نفس البيانات</td></tr>
+        <tr><th>الموجهة بالأحداث<small>Event-Driven</small></th><td><span class="meter r" data-v="4"></span></td><td><span class="meter g" data-v="2"></span></td><td><span class="meter r" data-v="3"></span></td><td><span class="meter g" data-v="5"></span></td><td><span class="meter g" data-v="2"></span></td><td><bdi dir="ltr">5+</bdi></td><td class="users">ملايين الأحداث<small>تُقاس بالرسائل في الثانية</small></td><td>يمتص الذروات ويفصل المكونات</td><td>تتبع التدفق والاتساق صعب</td><td>مدفوعات، إشعارات، تكاملات</td></tr>
+        <tr><th>الخدمات المصغّرة<small>Microservices</small></th><td><span class="meter r" data-v="5"></span></td><td><span class="meter g" data-v="1"></span></td><td><span class="meter r" data-v="5"></span></td><td><span class="meter g" data-v="5"></span></td><td><span class="meter g" data-v="1"></span></td><td><bdi dir="ltr">20–30+</bdi></td><td class="users">من ~1M إلى مئات الملايين<small>تُبرَّر بحجم الفريق قبل حجم المستخدمين</small></td><td>توسع ونشر مستقل لكل خدمة</td><td>تعقيد تشغيلي وتكلفة عالية</td><td>منصات ضخمة بفرق متعددة</td></tr>
+        <tr><th>الواجهات المصغّرة<small>Micro-frontends</small></th><td><span class="meter r" data-v="4"></span></td><td><span class="meter g" data-v="2"></span></td><td><span class="meter r" data-v="3"></span></td><td><span class="na">لا ينطبق</span></td><td><span class="meter g" data-v="2"></span></td><td><bdi dir="ltr">3+</bdi> فرق واجهة</td><td class="users">لا ترتبط بالعدد<small>تحل مشكلة فرق لا مشكلة حمل</small></td><td>استقلال فرق الواجهة</td><td>تحميل أثقل وتضارب تصميم</td><td>منتج ضخم بعدة فرق</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note warn"><b>اقرأ عمود المستخدمين بحذر:</b> سقف أي معمارية يحدده تصميم قاعدة البيانات والفهارس والكاش أكثر مما يحدده اسم المعمارية. مونوليث مصمم جيداً يتفوق على خدمات مصغّرة مصممة بشكل سيئ في كل الأحوال.</div>
+</section>
+
+<!-- A-06 -->
+<section class="sheet" id="a06">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-06</b></div>
+    <div class="tt"><h2>التوسع وعدد المستخدمين</h2><p>كيف تحوّل "عدد المستخدمين" إلى أرقام هندسية، ومتى تنتقل من طابق إلى الذي يليه.</p></div></div>
+  <div class="prose">
+    <p>"عدد المستخدمين" وحده رقم مضلل. الخادم لا يشعر بالمستخدمين، بل بالطلبات في الثانية وبالاتصالات المتزامنة. التحويل التقريبي:</p>
+  </div>
+  <div class="note"><b>الطلبات في الثانية وقت الذروة</b> ≈ (المستخدمون يومياً × الطلبات لكل مستخدم ÷ 86,400) × معامل الذروة (عادة 3 إلى 5).<br>مثال: 100 ألف مستخدم × 60 طلباً = 6 ملايين طلب يومياً ≈ 70 طلباً/ثانية في المتوسط، ونحو 280 في الذروة. هذا حمل يتعامل معه خادم أو خادمان مع كاش جيد.</div>
+
+  <h3 class="sub">احسب لمشروعك</h3>
+  <div class="calc">
+    <div class="in">
+      <label for="cDau">المستخدمون النشطون يومياً<small>DAU المتوقع خلال سنة</small><input id="cDau" type="number" min="0" step="1000" value="50000" inputmode="numeric"></label>
+      <label for="cRpu">طلبات المستخدم الواحد يومياً<small>تطبيق أعمال عادي: <bdi dir="ltr">40–100</bdi></small><input id="cRpu" type="number" min="1" value="60" inputmode="numeric"></label>
+      <label for="cMin">دقائق الاستخدام اليومي لكل مستخدم<small>تستخدم لتقدير المتزامنين</small><input id="cMin" type="number" min="1" value="15" inputmode="numeric"></label>
+      <label for="cPeak">معامل الذروة<small>3 للاستخدام الموزع، 5 لأوقات مركزة</small><input id="cPeak" type="number" min="1" max="20" step="0.5" value="4" inputmode="decimal"></label>
+    </div>
+    <div class="res" aria-live="polite">
+      <div><span>متوسط الطلبات في الثانية</span><b id="rAvg">—</b></div>
+      <div><span>الطلبات في الثانية وقت الذروة</span><b id="rPeak">—</b></div>
+      <div><span>مستخدمون متزامنون في الذروة</span><b id="rConc">—</b></div>
+      <p class="stage" id="rStage"></p>
+    </div>
+  </div>
+
+  <h3 class="sub">سلّم التوسع: سبعة طوابق</h3>
+  <div class="tablewrap">
+    <table id="stages">
+      <thead><tr><th>الطابق</th><th>المستخدمون يومياً</th><th>ماذا تضيف</th><th>علامة الانتقال للطابق التالي</th></tr></thead>
+      <tbody>
+        <tr id="st0"><th>0. خادم واحد</th><td>حتى 1K</td><td>التطبيق وقاعدة البيانات على VPS واحد، أو منصة جاهزة.</td><td>تحتاج نسخاً احتياطية موثوقة، أو الموارد تتجاوز 70% في الذروة.</td></tr>
+        <tr id="st1"><th>1. قاعدة بيانات مُدارة</th><td><bdi dir="ltr">1K – 10K</bdi></td><td>فصل PostgreSQL إلى خدمة مُدارة بنسخ احتياطي يومي، وCDN للملفات.</td><td>استعلامات متكررة بطيئة، أو صفحات تُحسب مراراً بنفس النتيجة.</td></tr>
+        <tr id="st2"><th>2. كاش وفهارس</th><td><bdi dir="ltr">10K – 100K</bdi></td><td>Redis للكاش والجلسات، فهارس مدروسة، Connection Pooling، مراقبة أداء.</td><td>خادم التطبيق وحده لا يكفي حتى بعد الكاش، أو تحتاج نشراً بلا توقف.</td></tr>
+        <tr id="st3"><th>3. موزّع أحمال</th><td><bdi dir="ltr">100K – 500K</bdi></td><td>عدة نسخ من التطبيق بلا حالة خلف Load Balancer، وجلسات في Redis.</td><td>قاعدة البيانات أصبحت عنق الزجاجة في القراءة، أو مهام ثقيلة تبطئ الطلبات.</td></tr>
+        <tr id="st4"><th>4. نسخ قراءة وطوابير</th><td><bdi dir="ltr">500K – 2M</bdi></td><td>Read Replicas، وطوابير وعمّال خلفيون للبريد والتقارير والمعالجة.</td><td>وحدة واحدة تستهلك موارد مختلفة جذرياً عن البقية، أو فرق تتصادم في النشر.</td></tr>
+        <tr id="st5"><th>5. خدمات مستقلة وأحداث</th><td><bdi dir="ltr">2M – 10M</bdi></td><td>فصل الوحدات الأثقل كخدمات، ونقل التواصل إلى أحداث عبر وسيط رسائل.</td><td>قاعدة الكتابة الواحدة لا تكفي، أو تحتاج زمن استجابة منخفضاً في عدة مناطق.</td></tr>
+        <tr id="st6"><th>6. تقسيم البيانات ومناطق</th><td>10M فأكثر</td><td>Sharding، ونشر في عدة مناطق جغرافية، وفريق منصة متخصص.</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="prose" style="font-size:15px;color:var(--graphite)">القاعدة: لا تصعد طابقاً لأنك تتوقع النمو، بل لأن علامة الانتقال ظهرت في المراقبة. كل طابق إضافي يضاعف تكلفة التشغيل وتعقيد الأعطال.</p>
+</section>
+
+<!-- A-07 -->
+<section class="sheet" id="a07">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-07</b></div>
+    <div class="tt"><h2>اختر معمارية مشروعك</h2><p>أجب عن أربعة أسئلة، وستظهر التوصية مع تنظيم الكود والطابق المناسب للبداية.</p></div></div>
+  <div class="picker">
+    <div class="qs">
+      <div class="q"><span id="q1l">نوع المشروع</span><div class="seg" role="group" aria-labelledby="q1l" data-q="type">
+        <button type="button" data-v="content">موقع محتوى</button>
+        <button type="button" data-v="app" aria-pressed="true">تطبيق أعمال أو SaaS</button>
+        <button type="button" data-v="market">متجر أو منصة وسيطة</button>
+        <button type="button" data-v="realtime">تطبيق لحظي</button></div></div>
+      <div class="q"><span id="q2l">المستخدمون النشطون يومياً خلال سنة</span><div class="seg" role="group" aria-labelledby="q2l" data-q="users">
+        <button type="button" data-v="s">أقل من 10K</button>
+        <button type="button" data-v="m" aria-pressed="true"><bdi dir="ltr">10K – 100K</bdi></button>
+        <button type="button" data-v="l"><bdi dir="ltr">100K – 1M</bdi></button>
+        <button type="button" data-v="xl">أكثر من 1M</button></div></div>
+      <div class="q"><span id="q3l">حجم الفريق</span><div class="seg" role="group" aria-labelledby="q3l" data-q="team">
+        <button type="button" data-v="solo" aria-pressed="true">أنا وحدي</button>
+        <button type="button" data-v="small"><bdi dir="ltr">2 – 5</bdi></button>
+        <button type="button" data-v="mid"><bdi dir="ltr">6 – 20</bdi></button>
+        <button type="button" data-v="large">أكثر من 20</button></div></div>
+      <div class="q" style="margin-bottom:0"><span id="q4l">الأولوية</span><div class="seg" role="group" aria-labelledby="q4l" data-q="speed">
+        <button type="button" data-v="fast">إطلاق خلال أسابيع</button>
+        <button type="button" data-v="balanced" aria-pressed="true">توازن</button>
+        <button type="button" data-v="long">منتج يعيش سنوات</button></div></div>
+    </div>
+    <div class="answer" id="answer" aria-live="polite"></div>
+  </div>
+</section>
+<!-- A-08 -->
+<section class="sheet" id="a08">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-08</b></div>
+    <div class="tt"><h2>منهج العمل على المشاريع الكبيرة</h2><p>دورة من عشر خطوات تتكرر مع كل ميزة. كل خطوة تترك أثراً مكتوباً في المستودع، فلا يضيع قرار ولا سياق.</p></div></div>
+  <div class="note"><b>المبدأ الحاكم:</b> المستودع هو المصدر الوحيد للحقيقة. أي شيء لم يُكتب فيه غير موجود، لا لك بعد شهر، ولا لزميلك، ولا لوكيل الذكاء الاصطناعي في الجلسة القادمة.</div>
+
+  <ol class="flow">
+    <li><div class="w"><h4>حدد المشكلة قبل الحل</h4><p>من المستخدم، وما مشكلته، وكيف نقيس النجاح، وما هو خارج النطاق صراحةً.</p></div><div class="f"><code>docs/PRD.md</code></div></li>
+    <li><div class="w"><h4>قرر المعمارية واكتب السبب</h4><p>كل قرار كبير يُسجّل مع بدائله وعواقبه. لا يتغير القرار إلا بسجل جديد يلغيه.</p></div><div class="f"><code>docs/ARCHITECTURE.md</code><br><code>docs/adr/</code></div></li>
+    <li><div class="w"><h4>صمّم البيانات أولاً</h4><p>الجداول والعلاقات والقيود قبل أي شاشة. البيانات هي أصعب ما يتغير لاحقاً.</p></div><div class="f"><code>docs/DATABASE.md</code><br><code>packages/db/schema</code></div></li>
+    <li><div class="w"><h4>اتفق على العقد</h4><p>شكل الطلبات والردود وأكواد الأخطاء قبل التنفيذ، فتعمل الواجهة والخادم بالتوازي.</p></div><div class="f"><code>docs/API.md</code></div></li>
+    <li><div class="w"><h4>قسّم إلى مهام صغيرة</h4><p>مواصفة لكل ميزة، ومهام لا تتجاوز يوماً واحداً، وكل مهمة لها اختبار يثبت اكتمالها.</p></div><div class="f"><code>docs/specs/</code><br><code>docs/TASKS.md</code></div></li>
+    <li><div class="w"><h4>نفّذ في فرع قصير العمر</h4><p>فرع لكل مهمة يُدمج خلال يوم أو يومين. الفروع الطويلة هي مصدر التعارضات المؤلمة.</p></div><div class="f"><code>feature/invoice-pdf</code></div></li>
+    <li><div class="w"><h4>دع الآلة تحرس الجودة</h4><p>فحوص تلقائية قبل كل commit، وCI يمنع الدمج إن فشل أي فحص. لا استثناءات.</p></div><div class="f"><code>.husky/</code><br><code>.github/workflows/ci.yml</code></div></li>
+    <li><div class="w"><h4>راجع قبل الدمج</h4><p>قالب PR يجبرك على الوصف وخطوات الاختبار. حتى لو كنت وحدك، راجع الـ diff كأنه كود شخص آخر.</p></div><div class="f"><code>.github/pull_request_template.md</code></div></li>
+    <li><div class="w"><h4>انشر على مراحل</h4><p>staging أولاً ثم الإنتاج، والميزات الكبيرة خلف Feature Flag، وخطة تراجع جاهزة قبل النشر.</p></div><div class="f"><code>docs/DEPLOYMENT.md</code></div></li>
+    <li><div class="w"><h4>وثّق وتعلّم</h4><p>سجل التغييرات، وتحديث حالة العمل، وتحويل كل خطأ متكرر إلى قاعدة مكتوبة لا تُكسر.</p></div><div class="f"><code>CHANGELOG.md</code><br><code>docs/PROGRESS.md</code><br><code>CLAUDE.md</code></div></li>
+  </ol>
+
+  <h3 class="sub">بروتوكول جلسة العمل مع وكيل الذكاء الاصطناعي</h3>
+  <div class="session">
+    <div><h4>قبل الجلسة</h4><ol><li>المستودع نظيف وآخر عمل محفوظ في commit</li><li>مهمة واحدة فقط من <code>TASKS.md</code></li><li>اطلب من الوكيل قراءة <code>CLAUDE.md</code> و<code>PROGRESS.md</code> والمواصفة</li><li>اطلب خطة دون كود، وراجعها قبل الموافقة</li></ol></div>
+    <div><h4>أثناء الجلسة</h4><ol><li>خطوة واحدة في كل مرة</li><li>lint وtypecheck واختبارات بعد كل خطوة</li><li>اقرأ الـ diff كاملاً قبل القبول</li><li>commit عند كل نقطة ناجحة</li><li>إن انحرف الوكيل: تراجع وابدأ سياقاً نظيفاً بدل الترقيع</li></ol></div>
+    <div><h4>بعد الجلسة</h4><ol><li>حدّث <code>PROGRESS.md</code>: ما أُنجز، وما التالي، وما المعلّق</li><li>أضف أي خطأ تكرر إلى "الدروس" في <code>CLAUDE.md</code></li><li>افتح PR للمراجعة</li><li>أغلق المهمة في <code>TASKS.md</code></li></ol></div>
+  </div>
+
+  <h3 class="sub">قواعد التسمية الموحدة</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>العنصر</th><th>القاعدة</th><th>مثال</th></tr></thead>
+      <tbody>
+        <tr><th>الملفات والمجلدات</th><td>kebab-case</td><td><code>invoice-list.tsx</code></td></tr>
+        <tr><th>مكونات React والأنواع</th><td>PascalCase</td><td><code>InvoiceList</code></td></tr>
+        <tr><th>المتغيرات والدوال</th><td>camelCase بفعل واضح</td><td><code>getInvoiceById</code></td></tr>
+        <tr><th>الثوابت ومتغيرات البيئة</th><td>UPPER_SNAKE_CASE</td><td><code>DATABASE_URL</code></td></tr>
+        <tr><th>جداول قاعدة البيانات</th><td>snake_case بصيغة الجمع</td><td><code>invoice_items</code></td></tr>
+        <tr><th>الفروع</th><td>نوع/وصف-قصير</td><td><code>feature/invoice-pdf</code> <code>fix/login-redirect</code></td></tr>
+        <tr><th>رسائل Commit</th><td>Conventional Commits</td><td><code>feat(billing): add invoice pdf export</code></td></tr>
+        <tr><th>سجلات القرار</th><td>رقم من أربع خانات ثم العنوان</td><td><code>0004-per-tenant-numbering.md</code></td></tr>
+        <tr><th>المواصفات</th><td>السنة-الشهر-الميزة</td><td><code>2026-10-invoices.md</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- A-09 -->
+<section class="sheet" id="a09">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-09</b></div>
+    <div class="tt"><h2>ملفات MD وهيكل المستودع</h2><p>كل ملف له وظيفة واحدة وتوقيت تحديث محدد. الصفوف المظللة هي الأهم للعمل مع الذكاء الاصطناعي.</p></div></div>
+
+  <div class="tree" role="table" aria-label="هيكل المستودع">
+    <div class="row head" role="row"><div role="columnheader">المسار</div><div role="columnheader">الوظيفة</div><div role="columnheader">متى يُحدَّث</div></div>
+    <div class="row"><div class="path dir">my-project/</div><div>جذر المستودع الواحد (Monorepo)</div><div class="when"></div></div>
+    <div class="row key"><div class="path d1">CLAUDE.md</div><div>تعليمات الوكيل: الأوامر، والقواعد، والممنوعات، والدروس. يقرؤه Claude Code تلقائياً في بداية كل جلسة.</div><div class="when">مع كل درس جديد</div></div>
+    <div class="row"><div class="path d1">AGENTS.md</div><div>نفس التعليمات لأدوات أخرى. اجعل نسخة واحدة هي الأصل والأخرى تشير إليها.</div><div class="when">مع CLAUDE.md</div></div>
+    <div class="row"><div class="path d1">README.md</div><div>كيف يشغّل أي شخص المشروع من الصفر خلال خمس دقائق.</div><div class="when">عند تغيير الإعداد</div></div>
+    <div class="row"><div class="path d1">CONTRIBUTING.md</div><div>طريقة العمل: الفروع، ورسائل commit، والمراجعة.</div><div class="when">نادراً</div></div>
+    <div class="row"><div class="path d1">CHANGELOG.md</div><div>ما تغيّر في كل إصدار، بلغة يفهمها غير المبرمج.</div><div class="when">كل إصدار</div></div>
+    <div class="row"><div class="path d1">SECURITY.md</div><div>كيف يُبلَّغ عن ثغرة، وسياسة التعامل مع الأسرار.</div><div class="when">نادراً</div></div>
+    <div class="row"><div class="path d1">.env.example</div><div>كل متغير بيئة مطلوب بقيمة وهمية وشرح قصير.</div><div class="when">عند إضافة متغير</div></div>
+    <div class="row"><div class="path d1 dir">docs/</div><div>ذاكرة المشروع المكتوبة</div><div class="when"></div></div>
+    <div class="row"><div class="path d2">PRD.md</div><div>ماذا نبني، ولمن، ولماذا، وما هو خارج النطاق.</div><div class="when">بداية كل مرحلة</div></div>
+    <div class="row"><div class="path d2">ARCHITECTURE.md</div><div>الصورة الكبيرة: الوحدات، وتدفق البيانات، والحدود بينها.</div><div class="when">عند قرار كبير</div></div>
+    <div class="row"><div class="path d2">DATABASE.md</div><div>الجداول والعلاقات وقواعد كتابة الـ Migrations.</div><div class="when">مع كل Migration</div></div>
+    <div class="row"><div class="path d2">API.md</div><div>العقود وأكواد الأخطاء الموحدة.</div><div class="when">مع كل endpoint</div></div>
+    <div class="row"><div class="path d2">CONVENTIONS.md</div><div>التسمية والهيكلة وأسلوب الكود بالأمثلة.</div><div class="when">نادراً</div></div>
+    <div class="row key"><div class="path d2">GLOSSARY.md</div><div>مصطلحات مجال العمل بتعريف واحد لكل مصطلح. يمنع الوكيل من تسمية نفس الشيء بثلاثة أسماء.</div><div class="when">عند ظهور مصطلح</div></div>
+    <div class="row key"><div class="path d2">TASKS.md</div><div>المهام: الحالية، والتالية، والمؤجلة.</div><div class="when">يومياً</div></div>
+    <div class="row key"><div class="path d2">PROGRESS.md</div><div>آخر حالة للعمل، ليكمل منها أي شخص أو وكيل دون شرح.</div><div class="when">نهاية كل جلسة</div></div>
+    <div class="row"><div class="path d2">RUNBOOK.md</div><div>ماذا تفعل عند كل عطل معروف، خطوة بخطوة.</div><div class="when">بعد كل حادثة</div></div>
+    <div class="row"><div class="path d2">DEPLOYMENT.md</div><div>البيئات، وخطوات النشر، وخطوات التراجع.</div><div class="when">عند تغيير البنية</div></div>
+    <div class="row"><div class="path d2 dir">adr/</div><div>سجلات القرارات المعمارية</div><div class="when"></div></div>
+    <div class="row"><div class="path d2" style="padding-left:82px">0001-modular-monolith.md</div><div>السياق، والقرار، والبدائل، والعواقب.</div><div class="when">لا يُعدَّل، يُستبدل</div></div>
+    <div class="row key"><div class="path d2 dir">specs/</div><div>مواصفة لكل ميزة قبل تنفيذها</div><div class="when">قبل كل ميزة</div></div>
+    <div class="row"><div class="path d1 dir">apps/web/</div><div>Next.js: الواجهة وطبقة BFF</div><div class="when"></div></div>
+    <div class="row key"><div class="path d2">CLAUDE.md</div><div>تعليمات خاصة بهذا التطبيق فقط. يقرؤها الوكيل عند العمل داخل المجلد.</div><div class="when">عند الحاجة</div></div>
+    <div class="row"><div class="path d1 dir">apps/worker/</div><div>المهام الخلفية والطوابير</div><div class="when"></div></div>
+    <div class="row"><div class="path d1 dir">packages/db/</div><div>مخطط قاعدة البيانات والـ Migrations</div><div class="when"></div></div>
+    <div class="row"><div class="path d1 dir">packages/ui/</div><div>مكونات الواجهة المشتركة</div><div class="when"></div></div>
+    <div class="row"><div class="path d1 dir">packages/config/</div><div>إعدادات ESLint وTypeScript المشتركة</div><div class="when"></div></div>
+    <div class="row"><div class="path d1 dir">.github/</div><div>ملف CI وقالب Pull Request</div><div class="when"></div></div>
+    <div class="row"><div class="path d1 dir">.claude/commands/</div><div>أوامر مخصصة لمهام متكررة، مثل أمر يبدأ ميزة جديدة وفق المنهج</div><div class="when">عند تكرار مهمة</div></div>
+  </div>
+
+  <h3 class="sub">هيكل الوحدة الواحدة داخل التطبيق</h3>
+  <div class="tpl">
+    <header><span>apps/web/src/modules/billing/</span><button class="copy" type="button">نسخ</button></header>
+<pre>billing/
+├── index.ts               # public API: the only file other modules may import
+├── billing.routes.ts      # route handlers / server actions: validate, then call service
+├── billing.service.ts     # business rules live here and nowhere else
+├── billing.repository.ts  # database access only
+├── billing.schema.ts      # Zod schemas + inferred types
+├── billing.events.ts      # events this module publishes
+└── billing.test.ts        # tests next to the code they test</pre>
+  </div>
+
+  <h3 class="sub">قوالب جاهزة للنسخ</h3>
+  <div class="tabs" role="tablist" aria-label="قوالب الملفات">
+    <button type="button" role="tab" aria-selected="true" aria-controls="t1" id="tb1">CLAUDE.md</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="t2" id="tb2" tabindex="-1">PROGRESS.md</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="t3" id="tb3" tabindex="-1">specs/feature.md</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="t4" id="tb4" tabindex="-1">adr/0001.md</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="t5" id="tb5" tabindex="-1">PR template</button>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="t1" aria-labelledby="tb1">
+    <div class="tpl"><header><span>CLAUDE.md<em>اجعله قصيراً ومحدداً، والتفاصيل في docs/</em></span><button class="copy" type="button">نسخ</button></header>
+<pre># CLAUDE.md
+
+## Project
+&lt;Name&gt;: &lt;one sentence: what it does and for whom&gt;.
+Read docs/PRD.md and docs/ARCHITECTURE.md before any change that touches more than one module.
+
+## Stack
+Next.js (App Router), TypeScript strict, PostgreSQL + Drizzle, Zod, Better Auth,
+Redis + BullMQ, Vitest, Playwright, pnpm + Turborepo.
+
+## Commands
+- pnpm dev            # start everything
+- pnpm lint           # must pass
+- pnpm typecheck      # must pass
+- pnpm test           # must pass
+- pnpm db:generate    # create a new migration from schema changes
+- pnpm db:migrate     # apply migrations locally
+
+## Architecture rules
+- Modular monolith. Code lives in apps/web/src/modules/&lt;module&gt;/
+- A module imports another module ONLY through its index.ts
+- Business logic lives in *.service.ts, never in route handlers or React components
+- Database access lives in *.repository.ts only
+- Every external input is validated with Zod at the boundary
+- Server-only secrets never reach client components
+
+## Conventions
+- Files: kebab-case. Components: PascalCase. DB tables: snake_case plural
+- Errors: throw AppError(code, message); never send raw errors to the client
+- Dates are stored in UTC and formatted only in the UI
+- Full list: docs/CONVENTIONS.md. Domain terms: docs/GLOSSARY.md
+
+## Workflow
+1. Read the task spec in docs/specs/ and docs/PROGRESS.md
+2. Propose a short plan. Wait for approval before writing code
+3. Make the smallest change that completes one step
+4. Run lint, typecheck and tests after each step
+5. At the end of the session, update docs/PROGRESS.md
+
+## Never
+- Never edit an existing migration. Create a new one
+- Never commit .env files or secrets
+- Never disable lint rules, TS checks or tests to make something pass
+- Never modify a test to make it pass without asking
+- Never add a dependency without asking first
+- Never touch files outside the task scope without saying so
+
+## Lessons learned
+- YYYY-MM-DD: &lt;what went wrong&gt; -&gt; &lt;the rule that prevents it&gt;</pre></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="t2" aria-labelledby="tb2" hidden>
+    <div class="tpl"><header><span>docs/PROGRESS.md<em>الجسر بين جلسة وأخرى</em></span><button class="copy" type="button">نسخ</button></header>
+<pre># PROGRESS
+
+## Current focus
+Task: docs/specs/2026-10-invoices.md (invoice PDF export)
+Branch: feature/invoice-pdf
+
+## Done (latest first)
+- YYYY-MM-DD: invoices table + migration 0007
+- YYYY-MM-DD: billing module skeleton + tests
+
+## Next
+- [ ] Generate PDF in apps/worker
+- [ ] Download button on invoice page
+
+## Blocked / open questions
+- Waiting for payment gateway sandbox keys
+
+## Notes for the next session
+- Invoice numbers are sequential per tenant, see docs/adr/0004</pre></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="t3" aria-labelledby="tb3" hidden>
+    <div class="tpl"><header><span>docs/specs/YYYY-MM-feature.md<em>لا تبدأ ميزة بدونها</em></span><button class="copy" type="button">نسخ</button></header>
+<pre># Spec: &lt;Feature name&gt;
+Status: draft | approved | done
+Owner: &lt;name&gt;    Date: YYYY-MM-DD
+
+## Problem
+Who has the problem, and what happens today.
+
+## Success criteria
+- Measurable outcome
+
+## Out of scope
+- What this feature will NOT do
+
+## User flow
+1. ...
+
+## Data changes
+Tables, columns, indexes, migration notes.
+
+## API / server actions
+Name, input (Zod), output, error codes.
+
+## Edge cases
+- Empty state, permissions, duplicates, concurrent edits, large inputs
+
+## Tests
+- Unit:
+- Integration:
+- E2E:
+
+## Tasks (each under one day)
+- [ ] ...</pre></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="t4" aria-labelledby="tb4" hidden>
+    <div class="tpl"><header><span>docs/adr/0001-modular-monolith.md<em>القرار وسببه، للأبد</em></span><button class="copy" type="button">نسخ</button></header>
+<pre># ADR 0001: Use a modular monolith
+Status: accepted    Date: YYYY-MM-DD
+
+## Context
+What forces a decision now: team size, expected load, deadlines, constraints.
+
+## Decision
+We will build one deployable app split into modules with strict boundaries.
+
+## Alternatives considered
+- Microservices: rejected, team of 3 cannot operate it
+- BaaS only: rejected, complex billing logic and data residency needs
+
+## Consequences
++ One deploy, simple transactions, fast development
+- Boundaries must be enforced by lint rules and code review
+- Revisit when a module needs independent scaling (see docs/RUNBOOK.md metrics)</pre></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="t5" aria-labelledby="tb5" hidden>
+    <div class="tpl"><header><span>.github/pull_request_template.md<em>آخر خط دفاع قبل الدمج</em></span><button class="copy" type="button">نسخ</button></header>
+<pre>## What and why
+Link to spec / task:
+
+## How to test
+1.
+
+## Screenshots (UI changes)
+
+## Checklist
+- [ ] lint, typecheck and tests pass locally
+- [ ] New logic has tests
+- [ ] Migration is new (no edits to old ones) and reversible
+- [ ] No secrets, no leftover console.log
+- [ ] Docs updated (API.md / DATABASE.md / PROGRESS.md)
+- [ ] I can explain every line in this diff</pre></div>
+  </div>
+</section>
+
+<!-- A-10 -->
+<section class="sheet" id="a10">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-10</b></div>
+    <div class="tt"><h2>القواعد الذهبية وقائمة ما قبل الإطلاق</h2><p>قواعد لا تُكسر في أي مشروع، ثم قائمة فحص تمر عليها قبل أن يرى أي عميل منتجك.</p></div></div>
+  <div class="rules">
+    <div><h4>الفرع الرئيسي محمي</h4><p>لا push مباشر إلى main. كل تغيير يمر عبر PR ينجح في CI.</p></div>
+    <div><h4>Migrations للأمام فقط</h4><p>لا تعديل لـ Migration منشورة، ونسخة احتياطية قبل أي Migration في الإنتاج.</p></div>
+    <div><h4>الأسرار خارج المستودع</h4><p><code>.env.example</code> فقط في Git، والقيم الحقيقية في إعدادات المنصة أو مدير أسرار.</p></div>
+    <div><h4>staging تطابق الإنتاج</h4><p>نفس الإصدارات والإعدادات، ببيانات وهمية. ما لم يُجرَّب هناك لا يصل للإنتاج.</p></div>
+    <div><h4>المراقبة من اليوم الأول</h4><p>تنبيهات أخطاء، وسجلات منظمة بمعرّف لكل طلب، حتى تتبع أي مشكلة من أولها لآخرها.</p></div>
+    <div><h4>نسخة احتياطية تُجرَّب</h4><p>نسخ يومي تلقائي، واستعادة تجريبية كل شهر. النسخة التي لم تُستعد قط لا يُعتمد عليها.</p></div>
+    <div><h4>أنواع موحدة من الطرف للطرف</h4><p>من مخطط قاعدة البيانات حتى الواجهة، دون <code>any</code> ودون <code>@ts-ignore</code>.</p></div>
+    <div><h4>العمليات المالية لا تتكرر</h4><p>كل دفعة أو Webhook يحمل مفتاح Idempotency، فيُنفَّذ مرة واحدة حتى لو وصل مرتين.</p></div>
+    <div><h4>المكتبات مثبّتة ومراقبة</h4><p>lockfile داخل المستودع، وأداة مثل Renovate أو Dependabot للتحديثات الأمنية.</p></div>
+    <div><h4>الميزات الكبيرة خلف مفتاح</h4><p>انشر الكود مطفأً عبر Feature Flag، ثم شغّله تدريجياً لفئة صغيرة أولاً.</p></div>
+    <div><h4>نقطة رجوع قبل كل جلسة</h4><p>commit نظيف قبل أن يبدأ الوكيل أي عمل. التراجع يجب أن يكلّف أمراً واحداً.</p></div>
+    <div><h4>لا كود لا تفهمه</h4><p>إن لم تستطع شرح سطر لزميل، فهو لا يدخل الفرع الرئيسي.</p></div>
+  </div>
+
+  <div class="check" id="check">
+    <header><h3>قائمة ما قبل الإطلاق</h3><b id="ckCount">0 / 16</b></header>
+    <div class="meterline"><i id="ckBar"></i></div>
+    <ul>
+      <li><label><input type="checkbox"><span>HTTPS على كل النطاقات والنطاقات الفرعية</span></label></li>
+      <li><label><input type="checkbox"><span>Rate limiting على تسجيل الدخول والـ API العام</span></label></li>
+      <li><label><input type="checkbox"><span>كل الصلاحيات مختبرة ضد IDOR</span></label></li>
+      <li><label><input type="checkbox"><span>Row Level Security مفعّلة إن كنت تستخدم Supabase</span></label></li>
+      <li><label><input type="checkbox"><span>لا أسرار في كود الواجهة ولا في تاريخ Git</span></label></li>
+      <li><label><input type="checkbox"><span>نسخ احتياطي يومي، وتمت استعادة تجريبية</span></label></li>
+      <li><label><input type="checkbox"><span>تنبيهات الأخطاء تصل إلى بريدك أو هاتفك</span></label></li>
+      <li><label><input type="checkbox"><span>Health checks ومراقبة توفر الخدمة</span></label></li>
+      <li><label><input type="checkbox"><span>صفحات 404 و500 واضحة ومفيدة</span></label></li>
+      <li><label><input type="checkbox"><span>ترويسات الأمان: CSP وHSTS</span></label></li>
+      <li><label><input type="checkbox"><span>فهارس على أعمدة البحث والربط</span></label></li>
+      <li><label><input type="checkbox"><span>اختبار حمل بضعف الحمل المتوقع</span></label></li>
+      <li><label><input type="checkbox"><span>خطة التراجع عن الإصدار مكتوبة ومجرّبة</span></label></li>
+      <li><label><input type="checkbox"><span>سياسة الخصوصية وشروط الاستخدام منشورة</span></label></li>
+      <li><label><input type="checkbox"><span>السجلات خالية من كلمات المرور والبيانات الحساسة</span></label></li>
+      <li><label><input type="checkbox"><span>README يكفي لتشغيل المشروع من الصفر</span></label></li>
+    </ul>
+  </div>
+</section>
+
+<!-- A-11 -->
+<section class="sheet" id="a11">
+  <div class="titleblock"><div class="no"><small>لوحة</small><b>A-11</b></div>
+    <div class="tt"><h2>أخطاء Vibe Coding وعلاجها</h2><p>هذه الأخطاء رأيتها تُسقط مشاريع كاملة. كل واحد منها يُمنع بقاعدة بسيطة.</p></div></div>
+  <div class="tablewrap">
+    <table class="pitfalls">
+      <thead><tr><th>الخطأ</th><th>العلاج</th></tr></thead>
+      <tbody>
+        <tr><td>قبول كود لا تفهمه لأنه "يعمل"</td><td>اطلب شرحاً سطراً بسطر، ثم اسأل: ماذا لو كانت القيمة فارغة؟ ماذا لو وصل الطلب مرتين؟ ماذا لو كان المستخدم غير مخوّل؟</td></tr>
+        <tr><td>جلسة طويلة يفقد فيها الوكيل السياق ويناقض نفسه</td><td>جلسة قصيرة لكل مهمة، و<code>PROGRESS.md</code> للانتقال بينها، وابدأ سياقاً جديداً بدل الجدال مع وكيل مشوّش.</td></tr>
+        <tr><td>طلب ضخم يعدّل عشرات الملفات دفعة واحدة</td><td>خطة أولاً، ثم خطوة واحدة، ثم فحوص، ثم commit. التغيير الكبير يُبنى من تغييرات صغيرة مُتحقق منها.</td></tr>
+        <tr><td>مفاتيح API في كود الواجهة</td><td>كل مفتاح سري يعيش في الخادم فقط. الواجهة تتحدث إلى خادمك، وخادمك يتحدث إلى المزود.</td></tr>
+        <tr><td>منطق العمل داخل مكونات React</td><td>المنطق في ملفات service، والمكوّن يعرض ويستدعي فقط. هذا ما يجعل الكود قابلاً للاختبار وإعادة الاستخدام.</td></tr>
+        <tr><td>الوكيل "يصلح" الاختبار بدل إصلاح الكود</td><td>قاعدة صريحة في <code>CLAUDE.md</code> تمنع تعديل الاختبارات دون إذن، واكتب الاختبار قبل الكود.</td></tr>
+        <tr><td>إضافة مكتبة لكل مشكلة صغيرة</td><td>لا مكتبة دون سؤال. راجع حجمها، وتاريخ آخر تحديث، وعدد من يصونها.</td></tr>
+        <tr><td>إسكات TypeScript بـ <code>any</code> و<code>@ts-ignore</code></td><td>وضع strict، وقاعدة lint تمنعهما، وCI يرفض الدمج إن ظهرتا.</td></tr>
+        <tr><td>قاعدة بيانات بلا فهارس ولا قيود</td><td>راجع كل جدول: المفتاح الأساسي، والمفاتيح الأجنبية، وNOT NULL، وUNIQUE، والفهارس على أعمدة البحث.</td></tr>
+        <tr><td>الثقة في ما يرسله المستخدم</td><td>Zod على كل مدخل، والتحقق من الصلاحية في الخادم دائماً. ما تخفيه الواجهة يمكن طلبه مباشرة.</td></tr>
+        <tr><td>تبنّي نمط معماري لأنه رائج</td><td>اكتب سجل قرار قصيراً قبل اعتماد أي نمط: ما المشكلة التي يحلها لي أنا تحديداً؟</td></tr>
+        <tr><td>commits نادرة وضخمة</td><td>commit صغير بعد كل خطوة ناجحة برسالة واضحة. هذا هو زر "التراجع" الحقيقي في مشروعك.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="end">
+  <details class="about-guide">
+    <summary>?? ????? ???? ??????? / About this file</summary>
+    <h3>??? ????????</h3>
+    <p>??? ????? ???? ?????? ?????? ????? ????? ???????? ??? ???????? ??? Full Stack. ?????? ?????? ?????? ??? 11 ????? ???? ??? 24 ???????? ?????? ??????????? ??????? ????? ???????? ?????? Markdown. ???? ????? ????? ??????? ?????????? ?? ?????? ????? ????? ?????? ?????? ??????. ????? ??? ??????? ?????? ?????? ?? ???????.</p>
+    <p>???? ???????? HTML ?CSS ?JavaScript ??? ????? ??? ?? ???? ????. ????? ?????? ????????? ?????? ???????? ???????? ???????????. ?? Alexandria ??? ??????? ???????? ?? Google Fonts ???????? ??????? ?????????? ??? ????? ??????? ???? ??????.</p>
+    <div lang="en" dir="ltr">
+      <h3>English overview</h3>
+      <p>An interactive Arabic learning guide for front-end developers moving into full-stack development. Its 11 sections cover a 24-week roadmap, architecture comparisons, scaling, project organization and reusable Markdown templates. Explore the load calculator and architecture picker, copy templates, review the launch checklist, or print the guide from your browser.</p>
+      <p>Built with HTML, CSS and JavaScript, with no package installation or backend required. The guide content is Arabic; this overview and the repository documentation are bilingual. Alexandria and the code font load through Google Fonts and require internet access; system fonts provide a fallback.</p>
+    </div>
+  </details>
+  <p style="margin-top:18px">???? ???? / <span lang="en" dir="ltr">Mohamed Reyad</span> ? <a href="https://github.com/reyad-dev">@reyad-dev</a> ? <a href="https://reyad.site/">reyad.site</a></p>
+  <p>كل الأرقام هنا تقديرات لتطبيق ويب نموذجي، وتختلف حسب طبيعة الطلبات وتصميم قاعدة البيانات والبنية التحتية. قِس مشروعك بأدوات المراقبة واختبارات الحمل، واجعل القياس هو من يقرر متى تصعد الطابق التالي.</p>
+</footer>
+</main>
+</div>
+<script>
+(function(){
+  /* meters */
+  document.querySelectorAll('.meter[data-v]').forEach(function(m){
+    var v=+m.dataset.v;
+    for(var i=1;i<=5;i++){var e=document.createElement('i');if(i<=v)e.className='f';m.appendChild(e);}
+    m.setAttribute('role','img');m.setAttribute('aria-label',v+' من 5');
+  });
+
+  /* scrollspy */
+  var links=[].slice.call(document.querySelectorAll('.index a'));
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting)return;
+        var on=null;
+        links.forEach(function(l){var hit=l.getAttribute('href')==='#'+e.target.id;l.classList.toggle('on',hit);if(hit)on=l;});
+        if(on&&window.innerWidth<=1080){on.scrollIntoView({block:'nearest',inline:'center'});}
+      });
+    },{rootMargin:'-25% 0px -65% 0px'});
+    document.querySelectorAll('section.sheet').forEach(function(s){obs.observe(s);});
+  }
+
+  /* calculator */
+  var stages=['0. خادم واحد','1. قاعدة بيانات مُدارة','2. كاش وفهارس','3. موزّع أحمال','4. نسخ قراءة وطوابير','5. خدمات مستقلة وأحداث','6. تقسيم البيانات ومناطق'];
+  function $(id){return document.getElementById(id);}
+  function fmt(n){if(!isFinite(n))return '—';return n>=100?Math.round(n).toLocaleString('en-US'):(Math.round(n*10)/10).toLocaleString('en-US');}
+  function calc(){
+    var d=Math.max(0,+$('cDau').value||0),r=Math.max(0,+$('cRpu').value||0),m=Math.max(0,+$('cMin').value||0),p=Math.max(1,+$('cPeak').value||1);
+    var avg=d*r/86400,peak=avg*p,conc=d*m/1440*p;
+    $('rAvg').textContent=fmt(avg);$('rPeak').textContent=fmt(peak);$('rConc').textContent=fmt(conc);
+    var s=d<1e3?0:d<1e4?1:d<1e5?2:d<5e5?3:d<2e6?4:d<1e7?5:6;
+    $('rStage').innerHTML='ابدأ من الطابق <strong>'+stages[s]+'</strong>. ظلّلناه لك في جدول السلّم أدناه.';
+    for(var i=0;i<7;i++){$('st'+i).classList.toggle('hit',i===s);}
+  }
+  ['cDau','cRpu','cMin','cPeak'].forEach(function(id){$(id).addEventListener('input',calc);});
+  calc();
+
+  /* architecture picker */
+  var st={type:'app',users:'m',team:'solo',speed:'balanced'};
+  var stageTxt={s:'الطابق 0 أو 1: خادم واحد أو منصة جاهزة، مع نسخ احتياطي يومي.',m:'الطابق 1 إلى 2: قاعدة بيانات مُدارة، ثم Redis عند أول بطء.',l:'الطابق 2 إلى 3: كاش وفهارس من البداية، وتطبيق بلا حالة جاهز لعدة نسخ.',xl:'الطابق 3 إلى 4 عند الإطلاق، مع خطة مكتوبة للطابق 5.'};
+  function recommend(){
+    var big=st.team==='mid'||st.team==='large',r;
+    if(st.type==='content'&&st.users!=='xl'){
+      r={name:'الموقع الثابت أولاً (JAMstack)',why:'محتواك يُقرأ أكثر مما يُكتب ويتغير ببطء، فالتوليد المسبق عبر CDN يعطيك أفضل أداء وظهور في محركات البحث بأقل تكلفة. الأجزاء التفاعلية القليلة كالنماذج والبحث تأتي من API صغير.',code:'حسب الصفحة والمكوّن، دون طبقات خلفية معقدة.',stack:'Astro أو Next.js بالتوليد الثابت، مع Headless CMS مثل Payload أو Sanity.',avoid:'لا تبنِ باك إند كاملاً لموقع محتوى، ولا تجعل كل صفحة تُحسب عند كل زيارة.'};
+    }else if(st.users==='xl'&&st.team==='large'){
+      r={name:'خدمات مصغّرة مع أحداث',why:'حجم الفريق والحمل معاً يبرران الاستقلالية. إن كنت تبدأ من الصفر فابدأ بالحدود داخل مونوليث معياري، ثم افصل الخدمات واحدة تلو الأخرى حسب القياس.',code:'المعمارية النظيفة داخل كل خدمة، وحدود الخدمات حسب مجال العمل.',stack:'NestJS أو Go، قاعدة بيانات لكل خدمة، Kafka أو RabbitMQ، Kubernetes، OpenTelemetry، API Gateway.',avoid:'لا تقسّم حسب الطبقات التقنية، ولا تشارك قاعدة بيانات بين خدمتين. هذا يصنع مونوليثاً موزّعاً بأسوأ ما في العالمين.'};
+    }else if(st.users==='xl'){
+      r={name:'مونوليث معياري مع توسع أفقي',why:'الحمل كبير لكن الفريق لن يحتمل تكلفة تشغيل خدمات مصغّرة. مونوليث معياري بعدة نسخ ونسخ قراءة وطوابير يصل إلى ملايين المستخدمين، ثم تفصل الوحدة الأثقل فقط عندما يثبت القياس ذلك.',code:'حسب الميزة داخل كل وحدة، والمعمارية النظيفة للوحدات المعقدة.',stack:'Next.js أو NestJS، PostgreSQL مع Read Replicas وPgBouncer، Redis، BullMQ، CDN.',avoid:'لا تنتقل إلى Microservices بسبب الرقم وحده. افصل وحدة واحدة فقط حين تصبح عنق الزجاجة فعلاً.'};
+    }else if(st.type==='realtime'){
+      r={name:'مونوليث معياري مع طبقة لحظية',why:'التحديث اللحظي يحتاج اتصالات مستمرة لا تناسب الدوال قصيرة العمر. مونوليث معياري مع خادم WebSocket وRedis Pub/Sub يغطي هذا، والأحداث الداخلية تمهّد لفصل الطبقة اللحظية لاحقاً.',code:big||st.speed==='long'?'حسب الميزة، مع فصل واضح بين منطق العمل وطبقة الاتصال اللحظي.':'حسب الميزة مع طبقات خفيفة: المسار ثم الخدمة ثم المستودع.',stack:'Next.js للواجهة، خادم Node بـ Hono أو NestJS للـ WebSocket، Redis Pub/Sub، BullMQ، PostgreSQL.',avoid:'لا تبنِ الاتصالات اللحظية على Serverless، ولا تحفظ حالة الاتصال في ذاكرة خادم واحد إن كنت ستشغّل أكثر من نسخة.'};
+    }else if(st.team==='solo'&&st.speed==='fast'&&(st.users==='s'||st.users==='m')){
+      r={name:'Next.js مع منصة جاهزة (BaaS)',why:'هدفك اختبار الفكرة بسرعة وأنت وحدك. منصة مثل Supabase توفر قاعدة البيانات والمصادقة والتخزين فتركّز على المنتج، وهي PostgreSQL في النهاية فالانتقال لاحقاً ممكن.',code:'حسب الميزة، مع إبقاء منطق العمل في ملفات service مستقلة عن المنصة.',stack:'Next.js، Supabase (قاعدة بيانات ومصادقة وتخزين)، Zod، Vercel.',avoid:'لا تطلق دون تفعيل Row Level Security على كل جدول، ولا تكتب منطق العمل داخل المكونات أو مرتبطاً بمكتبة المنصة مباشرة.'};
+    }else{
+      var why='يجمع سرعة البناء مع تنظيم يحميك حين يكبر المشروع: نشر واحد وقاعدة بيانات واحدة، وحدود واضحة بين الوحدات تسمح بفصل أي وحدة لاحقاً دون إعادة كتابة.';
+      if(st.type==='market')why+=' والطلبات والمخزون والمدفوعات تحتاج Transactions موثوقة، وهي أسهل بكثير في قاعدة بيانات واحدة.';
+      if(st.team==='large')why+=' ومع فريق كبير، افرض الحدود بأدوات lint وملكية واضحة لكل وحدة، وفكّر في فصل وحدتين أو ثلاث فقط إن احتاجت نشراً مستقلاً.';
+      r={name:'مونوليث معياري',why:why,code:big||st.speed==='long'?'حسب الميزة داخل كل وحدة، والمعمارية النظيفة للوحدات ذات المنطق المعقد كالفوترة والصلاحيات.':'حسب الميزة مع طبقات خفيفة: المسار ثم الخدمة ثم المستودع.',stack:big||st.speed==='long'?'Next.js للواجهة، NestJS للخادم، PostgreSQL + Drizzle، Redis + BullMQ، Turborepo.':'Next.js، PostgreSQL + Drizzle، Better Auth، Redis + BullMQ، Turborepo.',avoid:'لا تبدأ بخدمات مصغّرة "استعداداً للنمو"، ولا تسمح لوحدة باستيراد الملفات الداخلية لوحدة أخرى.'};
+    }
+    $('answer').innerHTML='<h3>'+r.name+'</h3><p class="why">'+r.why+'</p><dl><dt>تنظيم الكود</dt><dd>'+r.code+'</dd><dt>الحزمة</dt><dd>'+r.stack+'</dd><dt>ابدأ من</dt><dd>'+stageTxt[st.users]+'</dd></dl><p class="avoid"><b>تجنّب:</b> '+r.avoid+'</p>';
+  }
+  document.querySelectorAll('.seg').forEach(function(g){
+    g.addEventListener('click',function(ev){
+      var b=ev.target.closest('button');if(!b)return;
+      g.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      st[g.dataset.q]=b.dataset.v;recommend();
+    });
+    g.querySelectorAll('button:not([aria-pressed])').forEach(function(x){x.setAttribute('aria-pressed','false');});
+  });
+  recommend();
+
+  /* tabs */
+  var tabs=[].slice.call(document.querySelectorAll('[role="tab"]'));
+  function select(t){
+    tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;$(x.getAttribute('aria-controls')).hidden=!on;});
+    t.focus();
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){select(t);});
+    t.addEventListener('keydown',function(e){
+      if(e.key==='ArrowLeft'){e.preventDefault();select(tabs[(i+1)%tabs.length]);}
+      if(e.key==='ArrowRight'){e.preventDefault();select(tabs[(i-1+tabs.length)%tabs.length]);}
+    });
+  });
+
+  /* light highlighting + copy */
+  document.querySelectorAll('.tpl pre').forEach(function(pre){
+    var raw=pre.textContent;pre.dataset.raw=raw;
+    var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+    pre.innerHTML=raw.split('\n').map(function(line){
+      if(/^#{1,3} /.test(line))return '<span class="h">'+esc(line)+'</span>';
+      var k=line.indexOf('  # ');
+      if(k>-1)return esc(line.slice(0,k))+'<span class="c">'+esc(line.slice(k))+'</span>';
+      return esc(line);
+    }).join('\n');
+  });
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var pre=btn.closest('.tpl').querySelector('pre'),txt=pre.dataset.raw||pre.textContent;
+      function done(){btn.textContent='تم النسخ';btn.classList.add('ok');setTimeout(function(){btn.textContent='نسخ';btn.classList.remove('ok');},1600);}
+      if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(done,fallback);}else{fallback();}
+      function fallback(){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+    });
+  });
+
+  /* checklist */
+  var boxes=[].slice.call(document.querySelectorAll('#check input'));
+  function count(){var n=boxes.filter(function(b){return b.checked;}).length;$('ckCount').textContent=n+' / '+boxes.length;$('ckBar').style.width=(n/boxes.length*100)+'%';}
+  boxes.forEach(function(b){b.addEventListener('change',count);});count();
+})();
+</script>
+</body>
+</html>

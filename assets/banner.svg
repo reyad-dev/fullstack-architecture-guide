@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="Mohamed Reyad — Digital Marketing, Web Design, AI and Vibe Coding">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#090d16"/><stop offset="1" stop-color="#173c43"/></linearGradient><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#77e1cb" stroke-opacity=".07"/></pattern></defs>
+<rect width="1280" height="360" rx="24" fill="url(#bg)"/><rect width="1280" height="360" rx="24" fill="url(#grid)"/>
+<circle cx="1170" cy="70" r="190" fill="none" stroke="#77e1cb" stroke-opacity=".12"/><circle cx="1170" cy="70" r="145" fill="none" stroke="#77e1cb" stroke-opacity=".1"/>
+<rect x="56" y="54" width="5" height="22" rx="2" fill="#77e1cb"/><text x="76" y="72" font-family="Arial,sans-serif" font-size="17" letter-spacing="4" fill="#77e1cb">STRATEGY · DESIGN · TECHNOLOGY</text>
+<text x="56" y="152" font-family="Arial,sans-serif" font-size="64" font-weight="700" letter-spacing="-2" fill="#fff">Mohamed Reyad</text>
+<text x="59" y="198" font-family="Arial,sans-serif" font-size="24" fill="#c4d9df">Digital Marketing · Web Design · AI / Vibe Coding</text>
+<text x="59" y="244" font-family="Arial,sans-serif" font-size="20" fill="#91b0bd">Building the connection between great websites and business growth.</text>
+<rect x="56" y="282" width="138" height="35" rx="17" fill="#77e1cb"/><text x="125" y="305" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#102c32">reyad.site</text>
+<text x="220" y="305" font-family="Arial,sans-serif" font-size="15" fill="#a2bcc4">MARKETING WITH A BUILDER'S MINDSET</text>
+<g transform="translate(1030 143)" fill="none" stroke="#77e1cb" stroke-width="4"><rect width="168" height="112" rx="12"/><path d="M0 25H168M24 25V112"/><path d="m47 81 30-22 29 10 37-26"/><path d="M128 43h15v15"/><circle cx="12" cy="13" r="2" fill="#77e1cb"/></g></svg>
