@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/repo-icon.svg" width="180" alt="Full Stack Architecture Guide icon" />
+</p>
+
 # Full Stack Architecture Guide | دليل معمارية Full Stack
 
 [افتح الدليل / Live guide](https://reyad-dev.github.io/fullstack-architecture-guide/) · [GitHub](https://github.com/reyad-dev) · [Portfolio](https://reyad.site/)
@@ -56,6 +60,7 @@ The educational content remains Arabic; the file overview and documentation are 
 | `fullstack-architecture-guide.html` | Named standalone guide, identical to index / نسخة الدليل باسمها الأصلي |
 | `assets/banner.svg` | Banner from the GitHub profile / بانر هوية البروفايل |
 | `assets/favicon.svg` | MR browser icon / أيقونة المتصفح |
+| `assets/repo-icon.svg` | Repository project icon / أيقونة المشروع |
 | `.nojekyll` | Serve as a static site / نشر الملفات كموقع ثابت |
 | `sitemap.xml` | Canonical page for search discovery / خريطة الصفحة الأساسية لمحركات البحث |
 
