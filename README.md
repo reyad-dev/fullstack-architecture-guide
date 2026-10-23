@@ -2,13 +2,15 @@
   <img src="assets/repo-icon.svg" width="180" alt="Full Stack Architecture Guide icon" />
 </p>
 
-# Full Stack Architecture Guide | دليل معمارية Full Stack
+# ReyadStack — Full Stack Architecture Guide in Arabic | دليل معمارية Full Stack للمطورين
 
 [افتح الدليل / Live guide](https://reyad-dev.github.io/fullstack-architecture-guide/) · [GitHub](https://github.com/reyad-dev) · [Portfolio](https://reyad.site/)
 
+**ReyadStack**, created by **Mohamed Reyad (@reyad-dev)**, is a free Arabic full-stack architecture guide for front-end developers who want to understand project architecture, backend structure, scaling, and production-ready organization.
+
 ## العربية
 
-مرجع تعليمي مجاني ومتاح للجميع باللغة العربية لمطوّر Front-end الذي يريد الانتقال إلى تطوير Full Stack وفهم اختيار المعمارية وتنظيم المشاريع والتوسع. الواجهة تركز على موضوع الدليل واحتياجات القارئ، مع توقيع صاحب المشروع في التذييل. الخط الأساسي وخط العناوين **Alexandria**، وخط الأكواد **IBM Plex Mono**.
+**ReyadStack** هو مرجع تعليمي مجاني باللغة العربية من تطوير **محمد رياض (@reyad-dev)** لمطوّر Front-end الذي يريد الانتقال إلى تطوير Full Stack وفهم اختيار المعمارية وتنظيم المشاريع والتوسع. الواجهة تركز على موضوع الدليل واحتياجات القارئ، مع توقيع صاحب المشروع في التذييل. الخط الأساسي وخط العناوين **Alexandria**، وخط الأكواد **IBM Plex Mono**.
 
 ### محتويات الدليل
 
@@ -33,7 +35,7 @@ python -m http.server 8000
 
 ## English
 
-A free, public, interactive **Arabic** learning guide for front-end developers moving into full-stack development. It covers architecture selection, project organization and scaling. The interface puts the learning resource first, with a small creator credit in the footer. **Alexandria** is used for body text and headings; **IBM Plex Mono** is used for code.
+**ReyadStack** is a free, public, interactive Arabic learning guide created by **Mohamed Reyad (@reyad-dev)** for front-end developers moving into full-stack development. It covers architecture selection, project organization and scaling. The interface puts the learning resource first, with a small creator credit in the footer. **Alexandria** is used for body text and headings; **IBM Plex Mono** is used for code.
 
 ### Features
 
