@@ -2,7 +2,7 @@
   <img src="assets/repo-icon.svg" width="180" alt="Full Stack Architecture Guide icon" />
 </p>
 
-# ReyadStack — Full Stack Architecture Guide in Arabic | دليل معمارية Full Stack للمطورين
+# ReyadStack | Full Stack Architecture Guide in Arabic | دليل معمارية Full Stack للمطورين
 
 [افتح الدليل / Live guide](https://reyad-dev.github.io/fullstack-architecture-guide/) · [GitHub](https://github.com/reyad-dev) · [Portfolio](https://reyad.site/)
 
